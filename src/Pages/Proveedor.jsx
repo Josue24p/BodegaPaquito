@@ -10,6 +10,7 @@ import Paper from '@mui/material/Paper';
 import Sidebar from '../components/Sidebar';
 import Box from '@mui/material/Box';
 import { Button, Grid, TextField, Typography } from '@mui/material';
+import {getProveedorRequest} from '../api/proveedor';
 
 
 const StyledTableCell = styled(TableCell)(({ theme }) => ({
@@ -32,17 +33,18 @@ const StyledTableRow = styled(TableRow)(({ theme }) => ({
   },
 }));
 
-function createData(IdProveedor, categoria, nombre, descripcion, stock, precio) {
-  return {IdProveedor, categoria, nombre, descripcion, stock, precio };
-}
 
-const rows = [
+/* function createData(IdProveedor, nombre, ruc, direccion, telefono, correo) {
+  return { IdProveedor, nombre, ruc, direccion, telefono, correo };
+} */
+
+/* const rows = [
   createData('Frozen yoghurt', 159, 6.0, 24, 4.0, 5),
   createData('Ice cream sandwich', 237, 9.0, 37, 4.3, 5),
   createData('Eclair', 262, 16.0, 24, 6.0, 5),
   createData('Cupcake', 305, 3.7, 67, 4.3, 5),
   createData('Gingerbread', 356, 16.0, 49, 3.9, 5),
-];
+]; */
 
 const handleSubmit = (e) => {
   e.preventDefault()
@@ -50,6 +52,21 @@ const handleSubmit = (e) => {
 }
 
 function Proveedor() {
+const [proveedor, setProveedor] = React.useState([]);
+
+const getProveedor = async () =>{
+  try {
+    const res = await getProveedorRequest()
+    setProveedor(res.data)
+  } catch (error) {
+    console.log(error)
+  }
+}
+
+React.useEffect(()=>{
+getProveedor()
+},[])
+  
   return (
     <Box
       sx={{
@@ -85,24 +102,24 @@ function Proveedor() {
               <TableHead>
                 <TableRow>
                   <StyledTableCell>IdProveedor</StyledTableCell>
-                  <StyledTableCell align="right">Categoría</StyledTableCell>
                   <StyledTableCell align="right">Nombre</StyledTableCell>
-                  <StyledTableCell align="right">Descripción</StyledTableCell>
-                  <StyledTableCell align="right">Stock</StyledTableCell>
-                  <StyledTableCell align="right">Precio</StyledTableCell>
+                  <StyledTableCell align="right">Ruc</StyledTableCell>
+                  <StyledTableCell align="right">Direccion</StyledTableCell>
+                  <StyledTableCell align="right">Telefono</StyledTableCell>
+                  <StyledTableCell align="right">Correo</StyledTableCell>
                 </TableRow>
               </TableHead>
               <TableBody>
-                {rows.map((row) => (
-                  <StyledTableRow key={row.IdProveedor}>
+                {proveedor.map((pro) => (
+                  <StyledTableRow key={pro.IdProveedor}>
                     <StyledTableCell component="th" scope="row">
-                      {row.IdProveedor}
+                      {pro.IdProveedor}
                     </StyledTableCell>
-                    <StyledTableCell align="right">{row.categoria}</StyledTableCell>
-                    <StyledTableCell align="right">{row.nombre}</StyledTableCell>
-                    <StyledTableCell align="right">{row.descripcion}</StyledTableCell>
-                    <StyledTableCell align="right">{row.stock}</StyledTableCell>
-                    <StyledTableCell align="right">{row.precio}</StyledTableCell>
+                    <StyledTableCell align="right">{pro.Nombre}</StyledTableCell>
+                    <StyledTableCell align="right">{pro.RUC}</StyledTableCell>
+                    <StyledTableCell align="right">{pro.Direccion}</StyledTableCell>
+                    <StyledTableCell align="right">{pro.Telefono}</StyledTableCell>
+                    <StyledTableCell align="right">{pro.Correo}</StyledTableCell>
                   </StyledTableRow>
                 ))}
               </TableBody>
@@ -118,10 +135,11 @@ function Proveedor() {
           borderRadius: '10px',
           boxShadow: '0 0 10px rgba(0, 0, 0, 0.1)',
           margin: 0,
-          ml: 1,
-          padding: 2,
+          ml: 20,
+          mt:4,
+          padding: 4,
           width: {xs: '100%', md:'500px'},
-          ml: 20
+          height: {xs: '100%', md: '550px'}
         }}
         >
           <Typography sx={{
@@ -140,30 +158,39 @@ function Proveedor() {
             error={false}
             />
             <TextField
-            id='descripcion'
-            label='Descripción'
+            id='ruc'
+            label='Ruc'
             type='text'
             variant='outlined'
             fullWidth
-            helperText='Ingrese un descripcion válido'
+            helperText='Ingrese un ruc válido'
             error={false}
             />
             <TextField
-            id='stock'
-            label='Stock'
-            type='number'
+            id='direccion'
+            label='Dirección'
+            type='text'
             variant='outlined'
             fullWidth
-            helperText='Ingrese un stock válido'
+            helperText='Ingrese una dirección válida'
             error={false}
             />
             <TextField
-            id='precio'
-            label='Precio'
-            type='number'
+            id='telefono'
+            label='Teléfono'
+            type='text'
             variant='outlined'
             fullWidth
-            helperText='Ingrese un precio válido'
+            helperText='Ingrese un teléfono válido'
+            error={false}
+            />
+            <TextField
+            id='correo'
+            label='Correo Electrónico'
+            type='email'
+            variant='outlined'
+            fullWidth
+            helperText='Ingrese un email válido'
             error={false}
             />
             <Button

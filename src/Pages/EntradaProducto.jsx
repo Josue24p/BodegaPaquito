@@ -32,16 +32,16 @@ const StyledTableRow = styled(TableRow)(({ theme }) => ({
   },
 }));
 
-function createData(IdEntradaProducto, categoria, nombre, descripcion, stock, precio) {
-  return {IdEntradaProducto, categoria, nombre, descripcion, stock, precio };
+function createData(IdEntradaProducto, IdProveedor, IdProducto, IdCategoria, cantidad, FechaEntrada) {
+  return {IdEntradaProducto, IdProveedor, IdProducto, IdCategoria, cantidad, FechaEntrada };
 }
 
 const rows = [
-  createData('Frozen yoghurt', 159, 6.0, 24, 4.0, 5),
-  createData('Ice cream sandwich', 237, 9.0, 37, 4.3, 5),
-  createData('Eclair', 262, 16.0, 24, 6.0, 5),
-  createData('Cupcake', 305, 3.7, 67, 4.3, 5),
-  createData('Gingerbread', 356, 16.0, 49, 3.9, 5),
+  createData(1, 1, 1, 1, 100, '2024-05-30'),
+  createData(2, 1, 1, 1, 50, '2024-05-30'),
+  createData(3, 1, 1, 1, 10, '2024-05-30'),
+  createData(4, 2, 2, 2, 50, '2024-05-30'),
+  createData(5, 4, 4, 4, 50, '2024-05-30'),
 ];
 
 const handleSubmit = (e) => {
@@ -85,11 +85,11 @@ function EntradaProducto() {
               <TableHead>
                 <TableRow>
                   <StyledTableCell>IdEntradaProducto</StyledTableCell>
-                  <StyledTableCell align="right">Categoría</StyledTableCell>
-                  <StyledTableCell align="right">Nombre</StyledTableCell>
-                  <StyledTableCell align="right">Descripción</StyledTableCell>
-                  <StyledTableCell align="right">Stock</StyledTableCell>
-                  <StyledTableCell align="right">Precio</StyledTableCell>
+                  <StyledTableCell align="right">IdProveedor</StyledTableCell>
+                  <StyledTableCell align="right">IdProducto</StyledTableCell>
+                  <StyledTableCell align="right">IdCategoria</StyledTableCell>
+                  <StyledTableCell align="right">Cantidad</StyledTableCell>
+                  <StyledTableCell align="right">FechaEntrada</StyledTableCell>
                 </TableRow>
               </TableHead>
               <TableBody>
@@ -98,11 +98,11 @@ function EntradaProducto() {
                     <StyledTableCell component="th" scope="row">
                       {row.IdEntradaProducto}
                     </StyledTableCell>
-                    <StyledTableCell align="right">{row.categoria}</StyledTableCell>
-                    <StyledTableCell align="right">{row.nombre}</StyledTableCell>
-                    <StyledTableCell align="right">{row.descripcion}</StyledTableCell>
-                    <StyledTableCell align="right">{row.stock}</StyledTableCell>
-                    <StyledTableCell align="right">{row.precio}</StyledTableCell>
+                    <StyledTableCell align="right">{row.IdProveedor}</StyledTableCell>
+                    <StyledTableCell align="right">{row.IdProducto}</StyledTableCell>
+                    <StyledTableCell align="right">{row.IdCategoria}</StyledTableCell>
+                    <StyledTableCell align="right">{row.cantidad}</StyledTableCell>
+                    <StyledTableCell align="right">{row.FechaEntrada}</StyledTableCell>
                   </StyledTableRow>
                 ))}
               </TableBody>
