@@ -1,4 +1,4 @@
-import * as React from 'react';
+
 import { styled } from '@mui/material/styles';
 import Table from '@mui/material/Table';
 import TableBody from '@mui/material/TableBody';
@@ -134,7 +134,6 @@ function Producto() {
             ml: 1,
             padding: 2,
             width: { xs: '100%', md: '500px' },
-            ml: 20
           }}
         >
           <Typography sx={{

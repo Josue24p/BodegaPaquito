@@ -9,8 +9,9 @@ import TableRow from '@mui/material/TableRow';
 import Paper from '@mui/material/Paper';
 import Sidebar from '../components/Sidebar';
 import Box from '@mui/material/Box';
-import { Button, Grid, TextField, Typography } from '@mui/material';
+import { Grid, } from '@mui/material';
 import {getProveedorRequest} from '../api/proveedor';
+import ProveedorForm from '../components/ProveedorForm';
 
 
 const StyledTableCell = styled(TableCell)(({ theme }) => ({
@@ -46,10 +47,9 @@ const StyledTableRow = styled(TableRow)(({ theme }) => ({
   createData('Gingerbread', 356, 16.0, 49, 3.9, 5),
 ]; */
 
-const handleSubmit = (e) => {
-  e.preventDefault()
-  console.log('submit')
-}
+
+
+
 
 function Proveedor() {
 const [proveedor, setProveedor] = React.useState([]);
@@ -65,7 +65,7 @@ const getProveedor = async () =>{
 
 React.useEffect(()=>{
 getProveedor()
-},[])
+},[proveedor])
   
   return (
     <Box
@@ -126,86 +126,7 @@ getProveedor()
             </Table>
           </TableContainer>
         </Grid>
-        <Grid 
-        component={"form"}
-        onSubmit={handleSubmit}
-        sx={{
-          /* border: '1px solid green', */
-          border: '1px solid #ddd',
-          borderRadius: '10px',
-          boxShadow: '0 0 10px rgba(0, 0, 0, 0.1)',
-          margin: 0,
-          ml: 20,
-          mt:4,
-          padding: 4,
-          width: {xs: '100%', md:'500px'},
-          height: {xs: '100%', md: '550px'}
-        }}
-        >
-          <Typography sx={{
-            fontFamily:'revert',
-            fontSize: '2em',
-            textAlign: 'initial',
-            }}>Proveedor</Typography>
-            <TextField
-            id='nombre'
-            label='Nombre'
-            type='text'
-            variant='outlined'
-            autoFocus
-            fullWidth
-            helperText='Ingrese un nombre válido'
-            error={false}
-            />
-            <TextField
-            id='ruc'
-            label='Ruc'
-            type='text'
-            variant='outlined'
-            fullWidth
-            helperText='Ingrese un ruc válido'
-            error={false}
-            />
-            <TextField
-            id='direccion'
-            label='Dirección'
-            type='text'
-            variant='outlined'
-            fullWidth
-            helperText='Ingrese una dirección válida'
-            error={false}
-            />
-            <TextField
-            id='telefono'
-            label='Teléfono'
-            type='text'
-            variant='outlined'
-            fullWidth
-            helperText='Ingrese un teléfono válido'
-            error={false}
-            />
-            <TextField
-            id='correo'
-            label='Correo Electrónico'
-            type='email'
-            variant='outlined'
-            fullWidth
-            helperText='Ingrese un email válido'
-            error={false}
-            />
-            <Button
-            type='submit'
-            variant='outlined'
-            sx={{
-              mt:2,
-              color: 'white',
-              backgroundColor: 'cornflowerblue',
-              '&:hover': {
-                backgroundColor: 'blueviolet',
-              },
-              borderRadius: '10px',
-              }}>Registrarme</Button>
-        </Grid>
+              <ProveedorForm/>
       </Grid>
 
     </Box>
