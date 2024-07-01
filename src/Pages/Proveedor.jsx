@@ -10,8 +10,8 @@ import Paper from '@mui/material/Paper';
 import Sidebar from '../components/Sidebar';
 import Box from '@mui/material/Box';
 import { Grid, } from '@mui/material';
-import {getProveedorRequest} from '../api/proveedor';
 import ProveedorForm from '../components/ProveedorForm';
+import { useProveedor } from '../context/ProveedorContext';
 
 
 const StyledTableCell = styled(TableCell)(({ theme }) => ({
@@ -52,21 +52,12 @@ const StyledTableRow = styled(TableRow)(({ theme }) => ({
 
 
 function Proveedor() {
-const [proveedor, setProveedor] = React.useState([]);
-
-const getProveedor = async () =>{
-  try {
-    const res = await getProveedorRequest()
-    setProveedor(res.data)
-  } catch (error) {
-    console.log(error)
-  }
-}
+const {getProveedor, proveedor} = useProveedor();
 
 React.useEffect(()=>{
 getProveedor()
-},[proveedor])
-  
+},[])
+if(proveedor.length === 0) return <h1>No proveedores</h1>
   return (
     <Box
       sx={{
@@ -109,8 +100,8 @@ getProveedor()
                   <StyledTableCell align="right">Correo</StyledTableCell>
                 </TableRow>
               </TableHead>
-              <TableBody>
                 {proveedor.map((pro) => (
+              <TableBody key={pro.IdProveedor}>
                   <StyledTableRow key={pro.IdProveedor}>
                     <StyledTableCell component="th" scope="row">
                       {pro.IdProveedor}
@@ -121,12 +112,12 @@ getProveedor()
                     <StyledTableCell align="right">{pro.Telefono}</StyledTableCell>
                     <StyledTableCell align="right">{pro.Correo}</StyledTableCell>
                   </StyledTableRow>
-                ))}
               </TableBody>
+                ))}
             </Table>
           </TableContainer>
         </Grid>
-              <ProveedorForm/>
+              <ProveedorForm proveedor={proveedor}/>
       </Grid>
 
     </Box>

@@ -1,4 +1,3 @@
-import * as React from 'react';
 import { styled } from '@mui/material/styles';
 import Table from '@mui/material/Table';
 import TableBody from '@mui/material/TableBody';
@@ -9,7 +8,10 @@ import TableRow from '@mui/material/TableRow';
 import Paper from '@mui/material/Paper';
 import Sidebar from '../components/Sidebar';
 import Box from '@mui/material/Box';
-import { Button, Grid, TextField, Typography } from '@mui/material';
+import { Grid } from '@mui/material';
+import { useEntradaProduct } from '../context/EntradaProdContex';
+import { useEffect } from 'react';
+import EntradaProdForm from '../components/EntradaProdForm';
 
 
 const StyledTableCell = styled(TableCell)(({ theme }) => ({
@@ -32,24 +34,18 @@ const StyledTableRow = styled(TableRow)(({ theme }) => ({
   },
 }));
 
-function createData(IdEntradaProducto, IdProveedor, IdProducto, IdCategoria, cantidad, FechaEntrada) {
-  return {IdEntradaProducto, IdProveedor, IdProducto, IdCategoria, cantidad, FechaEntrada };
-}
-
-const rows = [
-  createData(1, 1, 1, 1, 100, '2024-05-30'),
-  createData(2, 1, 1, 1, 50, '2024-05-30'),
-  createData(3, 1, 1, 1, 10, '2024-05-30'),
-  createData(4, 2, 2, 2, 50, '2024-05-30'),
-  createData(5, 4, 4, 4, 50, '2024-05-30'),
-];
-
-const handleSubmit = (e) => {
+/* const handleSubmit = (e) => {
   e.preventDefault()
   console.log('submit')
 }
-
+ */
 function EntradaProducto() {
+const {getEntradaP, entrada} = useEntradaProduct();
+
+useEffect(()=>{
+getEntradaP();
+},[])
+if(entrada.length === 0) return <h1>No hay ingreso de productos</h1>
   return (
     <Box
       sx={{
@@ -93,92 +89,25 @@ function EntradaProducto() {
                 </TableRow>
               </TableHead>
               <TableBody>
-                {rows.map((row) => (
-                  <StyledTableRow key={row.IdEntradaProducto}>
+                {entrada.map((entrada) => (
+                  <StyledTableRow key={entrada.IdEntrada}>
                     <StyledTableCell component="th" scope="row">
-                      {row.IdEntradaProducto}
+                      {entrada.IdEntrada}
                     </StyledTableCell>
-                    <StyledTableCell align="right">{row.IdProveedor}</StyledTableCell>
-                    <StyledTableCell align="right">{row.IdProducto}</StyledTableCell>
-                    <StyledTableCell align="right">{row.IdCategoria}</StyledTableCell>
-                    <StyledTableCell align="right">{row.cantidad}</StyledTableCell>
-                    <StyledTableCell align="right">{row.FechaEntrada}</StyledTableCell>
+                    <StyledTableCell align="right">{entrada.IdProveedor}</StyledTableCell>
+                    <StyledTableCell align="right">{entrada.IdProducto}</StyledTableCell>
+                    <StyledTableCell align="right">{entrada.IdCategoria}</StyledTableCell>
+                    <StyledTableCell align="right">{entrada.Cantidad}</StyledTableCell>
+                    <StyledTableCell align="right">
+                    {new Date(entrada.FechaEntrada).toLocaleDateString()}
+                      </StyledTableCell>
                   </StyledTableRow>
                 ))}
               </TableBody>
             </Table>
           </TableContainer>
         </Grid>
-        <Grid 
-        component={"form"}
-        onSubmit={handleSubmit}
-        sx={{
-          /* border: '1px solid green', */
-          border: '1px solid #ddd',
-          borderRadius: '10px',
-          boxShadow: '0 0 10px rgba(0, 0, 0, 0.1)',
-          margin: 0,
-          ml: 1,
-          padding: 2,
-          width: {xs: '100%', md:'500px'},
-          ml: 20
-        }}
-        >
-          <Typography sx={{
-            fontFamily:'revert',
-            fontSize: '2em',
-            textAlign: 'initial',
-            }}>Entrada Productos</Typography>
-            <TextField
-            id='nombre'
-            label='Nombre'
-            type='text'
-            variant='outlined'
-            autoFocus
-            fullWidth
-            helperText='Ingrese un nombre válido'
-            error={false}
-            />
-            <TextField
-            id='descripcion'
-            label='Descripción'
-            type='text'
-            variant='outlined'
-            fullWidth
-            helperText='Ingrese un descripcion válido'
-            error={false}
-            />
-            <TextField
-            id='stock'
-            label='Stock'
-            type='number'
-            variant='outlined'
-            fullWidth
-            helperText='Ingrese un stock válido'
-            error={false}
-            />
-            <TextField
-            id='precio'
-            label='Precio'
-            type='number'
-            variant='outlined'
-            fullWidth
-            helperText='Ingrese un precio válido'
-            error={false}
-            />
-            <Button
-            type='submit'
-            variant='outlined'
-            sx={{
-              mt:2,
-              color: 'white',
-              backgroundColor: 'cornflowerblue',
-              '&:hover': {
-                backgroundColor: 'blueviolet',
-              },
-              borderRadius: '10px',
-              }}>Registrarme</Button>
-        </Grid>
+                <EntradaProdForm entrada={entrada}/>
       </Grid>
 
     </Box>

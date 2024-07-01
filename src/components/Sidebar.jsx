@@ -192,7 +192,7 @@ export default function Sidebar() {
                 >
                    <InventoryIcon /> 
                 </ListItemIcon>
-                <ListItemText primary="Inventario" sx={{ opacity: open ? 1 : 0 }} />
+                <ListItemText primary="Menú" sx={{ opacity: open ? 1 : 0 }} />
                 {open ? <ExpandLess/> : <ExpandMore/>}
               </ListItemButton>
                 <Collapse in={openSubMenu} timeout={"auto"} unmountOnExit onClick={()=>(navigate('/proveedor'))}>
@@ -205,7 +205,7 @@ export default function Sidebar() {
                     </ListItemButton>
                 </List>
                 </Collapse>
-                <Collapse in={openSubMenu} timeout={"auto"} unmountOnExit onClick={()=>(navigate('/inventario'))}>
+                <Collapse in={openSubMenu} timeout={"auto"} unmountOnExit onClick={()=>(navigate('/producto'))}>
                 <List component={"div"} disablePadding>
                     <ListItemButton sx={{pl: 4}}>
                         <ListItemIcon>
@@ -215,7 +215,7 @@ export default function Sidebar() {
                     </ListItemButton>
                 </List>
                 </Collapse>
-                <Collapse in={openSubMenu} timeout={"auto"} unmountOnExit onClick={()=>(navigate('/entrada-producto'))}>
+                <Collapse in={openSubMenu} timeout={"auto"} unmountOnExit onClick={()=>(navigate('/entradaProducto'))}>
                 <List component={"div"} disablePadding>
                     <ListItemButton sx={{pl: 4}}>
                         <ListItemIcon>
@@ -225,7 +225,7 @@ export default function Sidebar() {
                     </ListItemButton>
                 </List>
                 </Collapse>
-                <Collapse in={openSubMenu} timeout={"auto"} unmountOnExit onClick={()=>(navigate('/salida-producto'))}>
+                <Collapse in={openSubMenu} timeout={"auto"} unmountOnExit onClick={()=>(navigate('/salidaProducto'))}>
                 <List component={"div"} disablePadding>
                     <ListItemButton sx={{pl: 4}}>
                         <ListItemIcon>

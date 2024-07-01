@@ -9,8 +9,10 @@ import TableRow from '@mui/material/TableRow';
 import Paper from '@mui/material/Paper';
 import Sidebar from '../components/Sidebar';
 import Box from '@mui/material/Box';
-import MenuItem from '@mui/material/MenuItem';
-import { Button, Grid, TextField, Typography } from '@mui/material';
+import { Grid  } from '@mui/material';
+import ProductoForm from '../components/ProductoForm';
+import { useProduct } from '../context/ProductContext';
+import { useEffect } from 'react';
 
 
 const StyledTableCell = styled(TableCell)(({ theme }) => ({
@@ -33,36 +35,22 @@ const StyledTableRow = styled(TableRow)(({ theme }) => ({
   },
 }));
 
-function createData(IdProducto, categoria, nombre, descripcion, stock, precio) {
-  return { IdProducto, categoria, nombre, descripcion, stock, precio };
-}
 
-const rows = [
-  createData(1, 'Electrodomésticos', 'Laptop', 24, 4.0, 5),
-  createData(2, 'Tecnología', 'Silla', 37, 4.3, 5),
-  createData(3, 'Ropa', 'Camisa', 24, 6.0, 5),
-  createData(4, 'Alimentos', 'Cereal', 67, 4.3, 5),
-  createData(5, 'Deportes', 'Muñeca', 49, 3.9, 5),
-];
 
-function createCategoria(IdCategoria, nombre, descripcion ){
-  return {IdCategoria, nombre, descripcion}
-}
 
-const categorias = [
-  createCategoria(1,'Electrodomésticos', 'Dispositivos eléctricos para el hogar'),
-  createCategoria(2,'Tecnología', 'Dispositivos y accesorios tecnológicos'),
-  createCategoria(3,'Ropa', 'Prendas de vestir para hombres, mujeres y niños'),
-  createCategoria(4,'Alimentos', 'Productos alimenticios comestibles'),
-  createCategoria(5,'Deportes', 'Equipamiento y accesorios deportivos'),
-];
-
-const handleSubmit = (e) => {
+/* const handleSubmit = (e) => {
   e.preventDefault()
   console.log('submit')
-}
+} */
 
 function Producto() {
+  const {getProduct, product} = useProduct();
+
+  useEffect(() => {
+    getProduct();
+  }, []);
+
+  if(product.length === 0) return <h1>No productos</h1>
   return (
     <Box
       sx={{
@@ -90,7 +78,9 @@ function Producto() {
             /* border: '1px solid red', */
             margin: { xs: 0, md: 0 },
             p: { xs: 1, md: 2 },
-            width: { xs: '100%', md: '900px' }
+            width: { xs: '100%', md: '900px' },
+            ml: {xs: 1, md:0},
+            mr: {xs:1,md:15}
           }}
         >
           <TableContainer component={Paper}>
@@ -106,105 +96,23 @@ function Producto() {
                 </TableRow>
               </TableHead>
               <TableBody>
-                {rows.map((row) => (
-                  <StyledTableRow key={row.IdProducto}>
+                {product.map((product) => (
+                  <StyledTableRow key={product.IdProducto}>
                     <StyledTableCell component="th" scope="row">
-                      {row.IdProducto}
+                      {product.IdProducto}
                     </StyledTableCell>
-                    <StyledTableCell align="right">{row.categoria}</StyledTableCell>
-                    <StyledTableCell align="right">{row.nombre}</StyledTableCell>
-                    <StyledTableCell align="right">{row.descripcion}</StyledTableCell>
-                    <StyledTableCell align="right">{row.stock}</StyledTableCell>
-                    <StyledTableCell align="right">{row.precio}</StyledTableCell>
+                    <StyledTableCell align="right">{product.IdCategoria}</StyledTableCell>
+                    <StyledTableCell align="right">{product.Nombre}</StyledTableCell>
+                    <StyledTableCell align="right">{product.Descripcion}</StyledTableCell>
+                    <StyledTableCell align="right">{product.Stock}</StyledTableCell>
+                    <StyledTableCell align="right">{product.Precio}</StyledTableCell>
                   </StyledTableRow>
                 ))}
               </TableBody>
             </Table>
           </TableContainer>
         </Grid>
-        <Grid
-          component={"form"}
-          onSubmit={handleSubmit}
-          sx={{
-            /* border: '1px solid green', */
-            border: '1px solid #ddd',
-            borderRadius: '10px',
-            boxShadow: '0 0 10px rgba(0, 0, 0, 0.1)',
-            margin: 0,
-            ml: 1,
-            padding: 2,
-            width: { xs: '100%', md: '500px' },
-          }}
-        >
-          <Typography sx={{
-            fontFamily: 'revert',
-            fontSize: '2em',
-            textAlign: 'initial',
-          }}>Productos</Typography>
-          <TextField
-            id='nombre'
-            label='Nombre'
-            type='text'
-            variant='outlined'
-            autoFocus
-            fullWidth
-            helperText='Ingrese un nombre válido'
-            error={false}
-          />
-          <TextField
-            id='categoria'
-            label='Categoría'
-            select
-            variant='outlined'
-            autoFocus
-            fullWidth
-            helperText='Ingrese una categoria válida'
-            error={false}
-          >{categorias.map((cat)=>(
-            <MenuItem key={cat.IdCategoria} value={cat.IdCategoria}>
-              {cat.nombre}
-            </MenuItem>
-          ))}</TextField>
-          <TextField
-            id='descripcion'
-            label='Descripción'
-            type='text'
-            variant='outlined'
-            fullWidth
-            helperText='Ingrese un descripcion válido'
-            error={false}
-          />
-          <TextField
-            id='stock'
-            label='Stock'
-            type='number'
-            variant='outlined'
-            fullWidth
-            helperText='Ingrese un stock válido'
-            error={false}
-          />
-          <TextField
-            id='precio'
-            label='Precio'
-            type='number'
-            variant='outlined'
-            fullWidth
-            helperText='Ingrese un precio válido'
-            error={false}
-          />
-          <Button
-            type='submit'
-            variant='outlined'
-            sx={{
-              mt: 2,
-              color: 'white',
-              backgroundColor: 'cornflowerblue',
-              '&:hover': {
-                backgroundColor: 'blueviolet',
-              },
-              borderRadius: '10px',
-            }}>Registrarme</Button>
-        </Grid>
+                <ProductoForm key={product.IdProducto} product ={product}/>
       </Grid>
 
     </Box>
