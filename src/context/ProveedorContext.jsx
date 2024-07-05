@@ -28,7 +28,7 @@ export function ProveedorProvider({ children }) {
   const createProveedor = async (provedors) => {
     try {
       const res = await createProveedorRequest(provedors)
-      setProveedor([...proveedor, res.data]);
+      setProveedor((prevProveedores)=>[...prevProveedores, res.data]);
       console.log(res.data)
     } catch (error) {
       console.log(error)

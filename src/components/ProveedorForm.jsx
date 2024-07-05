@@ -6,7 +6,7 @@ import { useForm } from 'react-hook-form';
 function ProveedorForm() {
 
   const { register, handleSubmit, reset } = useForm();
-  const {createProveedor}= useProveedor();
+  const {createProveedor, getProveedor}= useProveedor();
   /* const [proveedor, setProveedor] = React.useState([]); */
 
   /* 
@@ -19,6 +19,7 @@ function ProveedorForm() {
   const submit = async(data) => {
     try {
      await createProveedor(data);
+     await getProveedor()
       reset()
     } catch (error) {
       console.error(error);

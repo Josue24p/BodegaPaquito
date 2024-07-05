@@ -100,9 +100,9 @@ if(proveedor.length === 0) return <h1>No proveedores</h1>
                   <StyledTableCell align="right">Correo</StyledTableCell>
                 </TableRow>
               </TableHead>
+              <TableBody>
                 {proveedor.map((pro) => (
-              <TableBody key={pro.IdProveedor}>
-                  <StyledTableRow key={pro.IdProveedor}>
+                  <StyledTableRow key={`${pro.IdProveedor}`}>
                     <StyledTableCell component="th" scope="row">
                       {pro.IdProveedor}
                     </StyledTableCell>
@@ -112,8 +112,8 @@ if(proveedor.length === 0) return <h1>No proveedores</h1>
                     <StyledTableCell align="right">{pro.Telefono}</StyledTableCell>
                     <StyledTableCell align="right">{pro.Correo}</StyledTableCell>
                   </StyledTableRow>
-              </TableBody>
                 ))}
+              </TableBody>
             </Table>
           </TableContainer>
         </Grid>
