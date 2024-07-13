@@ -1,32 +1,49 @@
-import { Button, Grid, TextField, Typography } from '@mui/material'
+import { Button, FormControl, Grid, InputLabel, Select, TextField, Typography } from '@mui/material'
 import MenuItem from '@mui/material/MenuItem';
 import { useForm } from 'react-hook-form';
 import { useProduct } from '../context/ProductContext';
+import { useCategoria } from '../context/CategoriaContext';
+import { useEffect, useState } from 'react';
+
 
 function ProductoForm(/* { product } */) {
-    const { register, handleSubmit, reset } = useForm();
+    const { register, handleSubmit, reset, setValue } = useForm();
     const { createProduct } = useProduct();
+    const { categoria, getCategoria } = useCategoria();
+    const [categories, setCategories] = useState('')
 
     const submit = async (data) => {
+        console.log(data)
         try {
-            await createProduct(data);
+            data.stock = parseInt(data.stock, 10); // Convertir a entero
+            data.precio = parseFloat(data.precio); // Convertir a flotante
+            createProduct(data);
             reset();
+            setCategories('')
         } catch (error) {
             console.log(error)
         }
     }
 
-    /*   const obtenerCategoria = async()=>{
-          try {
-              let res = await getProduct();
-              let categoria = res.map((cat)=>(
-                  cat.IdCategoria
-              ))
-              console.log(categoria)
-          } catch (error) {
-              console.log(error)
-          }
-      } */
+    /* const obtenerCategoria = async () => {
+        try {
+            let res = await getCategoria();
+
+            console.log(res)
+        } catch (error) {
+            console.log(error)
+        }
+    } */
+
+    useEffect(() => {
+        getCategoria()
+    }, [])
+
+
+    const handleCategoryChange = (event) => {
+        setCategories(event.target.value);
+        setValue('idCategoria',event.target.value)
+    }
 
     return (
         <Grid
@@ -48,6 +65,25 @@ function ProductoForm(/* { product } */) {
                 fontSize: '2em',
                 textAlign: 'initial',
             }}>Productos</Typography>
+            <FormControl fullWidth variant="outlined" margin="normal">
+                <InputLabel 
+                id="categoria-label">Categoría</InputLabel>
+                <Select
+                 {...register('idCategoria', { required: true })}
+                    labelId="categoria-label"
+                    id="idCategoria"
+                    value={categories}
+                    onChange={handleCategoryChange}
+                    label="Categoría"
+                    required
+                >
+                    {categoria.map((cat) => (
+                        <MenuItem key={cat.IdCategoria} value={cat.IdCategoria}>
+                            {cat.IdCategoria}
+                        </MenuItem>
+                    ))}
+                </Select>
+            </FormControl>
             <TextField
                 {...register('nombre', { required: true })}
                 id='nombre'
@@ -59,23 +95,7 @@ function ProductoForm(/* { product } */) {
                 helperText='Ingrese un nombre válido'
                 error={false}
             />
-            <TextField
-                {...register('categoria', { required: true })}
-                id='categoria'
-                label='Categoría'
-                select
-                variant='outlined'
-                autoFocus
-                fullWidth
-                helperText='Ingrese una categoria válida'
-                error={false}
-            >
-                 {/* {product.map((cat)=>( */}
-                <MenuItem /* key={cat.IdProducto} value={cat.IdCategoria} */>
-                    {/* {cat.IdCategoria} */}
-                </MenuItem>
-                {/*  ))} */}
-            </TextField>
+            
             <TextField
                 {...register('descripcion', { required: true })}
                 id='descripcion'

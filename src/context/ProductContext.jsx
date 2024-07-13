@@ -20,17 +20,17 @@ export function ProductProvider({ children }) {
     try {
       const res = await getProductoRequest()
       setProduct(res.data)
-      console.log(res.data)
+      /* console.log(res.data) */
       return res.data
     } catch (error) {
       console.log(error)
     }
   }
 
-  const createProduct = async () => {
+  const createProduct = async (producto) => {
     try {
-      const res = await createProductoRequest()
-      setProduct([...product, res.data]);
+      const res = await createProductoRequest(producto)
+      setProduct((prevProducts)=>[...prevProducts, res.data]);
       console.log(res.data)
     } catch (error) {
       console.log(error)

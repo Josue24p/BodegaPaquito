@@ -8,27 +8,30 @@ import { ProveedorProvider } from './context/ProveedorContext';
 import { ProductProvider } from './context/ProductContext';
 import { EntradaProductProvider } from './context/EntradaProdContex';
 import { SalidaProductProvider } from './context/SalidaProdContext';
+import { CategoriaProvider } from './context/CategoriaContext';
 
 
 function App() {
 
   return (
     <ProductProvider>
-      <EntradaProductProvider>
-        <SalidaProductProvider>
-    <ProveedorProvider>
-      <BrowserRouter>
-        <Routes>
-          <Route path='/' element={<Dashboard />}></Route>
-          <Route path='/producto' element={<Producto />}></Route>
-          <Route path='/proveedor' element={<Proveedor />}></Route>
-          <Route path='/entradaProducto' element={<EntradaProducto />}></Route>
-          <Route path='/salidaProducto' element={<SalidaProducto />}></Route>
-        </Routes>
-      </BrowserRouter>
-    </ProveedorProvider>
-    </SalidaProductProvider>
-    </EntradaProductProvider>
+      <CategoriaProvider>
+        <EntradaProductProvider>
+          <SalidaProductProvider>
+            <ProveedorProvider>
+              <BrowserRouter>
+                <Routes>
+                  <Route path='/' element={<Dashboard />}></Route>
+                  <Route path='/producto' element={<Producto />}></Route>
+                  <Route path='/proveedor' element={<Proveedor />}></Route>
+                  <Route path='/entradaProducto' element={<EntradaProducto />}></Route>
+                  <Route path='/salidaProducto' element={<SalidaProducto />}></Route>
+                </Routes>
+              </BrowserRouter>
+            </ProveedorProvider>
+          </SalidaProductProvider>
+        </EntradaProductProvider>
+      </CategoriaProvider>
     </ProductProvider>
   )
 }
