@@ -94,9 +94,9 @@ if(entrada.length === 0) return <h1>No hay ingreso de productos</h1>
                     <StyledTableCell component="th" scope="row">
                       {entrada.IdEntrada}
                     </StyledTableCell>
-                    <StyledTableCell align="right">{entrada.IdProveedor}</StyledTableCell>
-                    <StyledTableCell align="right">{entrada.IdProducto}</StyledTableCell>
-                    <StyledTableCell align="right">{entrada.IdCategoria}</StyledTableCell>
+                    <StyledTableCell align="right">{entrada.Proveedor}</StyledTableCell>
+                    <StyledTableCell align="right">{entrada.Producto}</StyledTableCell>
+                    <StyledTableCell align="right">{entrada.Categoria}</StyledTableCell>
                     <StyledTableCell align="right">{entrada.Cantidad}</StyledTableCell>
                     <StyledTableCell align="right">
                     {new Date(entrada.FechaEntrada).toLocaleDateString()}

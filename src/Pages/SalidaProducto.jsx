@@ -95,11 +95,13 @@ function SalidaProducto() {
                     <StyledTableCell component="th" scope="row">
                       {salida.IdSalida}
                     </StyledTableCell>
-                    <StyledTableCell align="right">{salida.IdCliente}</StyledTableCell>
-                    <StyledTableCell align="right">{salida.IdProducto}</StyledTableCell>
-                    <StyledTableCell align="right">{salida.IdCategoria}</StyledTableCell>
+                    <StyledTableCell align="right">{salida.Cliente}</StyledTableCell>
+                    <StyledTableCell align="right">{salida.Producto}</StyledTableCell>
+                    <StyledTableCell align="right">{salida.Categoria}</StyledTableCell>
                     <StyledTableCell align="right">{salida.Cantidad}</StyledTableCell>
-                    <StyledTableCell align="right">{salida.FechaSalida}</StyledTableCell>
+                    <StyledTableCell align="right">
+                    {new Date(salida.FechaSalida).toLocaleDateString()}
+                      </StyledTableCell>
                   </StyledTableRow>
                 ))}
               </TableBody>

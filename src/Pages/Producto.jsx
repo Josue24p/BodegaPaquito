@@ -97,11 +97,11 @@ function Producto() {
               </TableHead>
               <TableBody>
                 {product.map((product) => (
-                  <StyledTableRow key={product.IdProducto}>
+                  <StyledTableRow key={`${product.IdProducto}`}>
                     <StyledTableCell component="th" scope="row">
                       {product.IdProducto}
                     </StyledTableCell>
-                    <StyledTableCell align="right">{product.IdCategoria}</StyledTableCell>
+                    <StyledTableCell align="right">{product.Categoria}</StyledTableCell>
                     <StyledTableCell align="right">{product.Nombre}</StyledTableCell>
                     <StyledTableCell align="right">{product.Descripcion}</StyledTableCell>
                     <StyledTableCell align="right">{product.Stock}</StyledTableCell>

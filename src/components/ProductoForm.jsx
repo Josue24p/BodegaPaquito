@@ -8,7 +8,7 @@ import { useEffect, useState } from 'react';
 
 function ProductoForm(/* { product } */) {
     const { register, handleSubmit, reset, setValue } = useForm();
-    const { createProduct } = useProduct();
+    const { createProduct, getProduct } = useProduct();
     const { categoria, getCategoria } = useCategoria();
     const [categories, setCategories] = useState('')
 
@@ -16,10 +16,11 @@ function ProductoForm(/* { product } */) {
         console.log(data)
         try {
             data.stock = parseInt(data.stock, 10); // Convertir a entero
-            data.precio = parseFloat(data.precio); // Convertir a flotante
-            createProduct(data);
-            reset();
+            data.precio = parseFloat(data.precio, 10.2); // Convertir a flotante
+            await createProduct(data);
             setCategories('')
+            await getProduct()
+            reset();
         } catch (error) {
             console.log(error)
         }
@@ -58,6 +59,7 @@ function ProductoForm(/* { product } */) {
                 ml: 1,
                 padding: 2,
                 width: { xs: '100%', md: '500px' },
+                height: { xs: '100%', md: '550px' }
             }}
         >
             <Typography sx={{
@@ -79,7 +81,7 @@ function ProductoForm(/* { product } */) {
                 >
                     {categoria.map((cat) => (
                         <MenuItem key={cat.IdCategoria} value={cat.IdCategoria}>
-                            {cat.IdCategoria}
+                            {cat.Nombre}
                         </MenuItem>
                     ))}
                 </Select>
@@ -125,6 +127,9 @@ function ProductoForm(/* { product } */) {
                 fullWidth
                 helperText='Ingrese un precio válido'
                 error={false}
+                inputProps={{
+                    step: "0.01" // Permite la entrada de decimales
+                }}
             />
             <Button
                 type='submit'
