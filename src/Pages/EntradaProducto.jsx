@@ -90,7 +90,7 @@ if(entrada.length === 0) return <h1>No hay ingreso de productos</h1>
               </TableHead>
               <TableBody>
                 {entrada.map((entrada) => (
-                  <StyledTableRow key={entrada.IdEntrada}>
+                  <StyledTableRow key={`${entrada.IdEntrada}`}>
                     <StyledTableCell component="th" scope="row">
                       {entrada.IdEntrada}
                     </StyledTableCell>
@@ -107,7 +107,7 @@ if(entrada.length === 0) return <h1>No hay ingreso de productos</h1>
             </Table>
           </TableContainer>
         </Grid>
-                <EntradaProdForm entrada={entrada}/>
+                <EntradaProdForm key={entrada.IdEntrada} entrada={entrada}/>
       </Grid>
 
     </Box>

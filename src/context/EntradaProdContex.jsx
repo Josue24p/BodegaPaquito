@@ -27,9 +27,9 @@ export function EntradaProductProvider({ children }){
         }
       }
     
-      const createEntradaP = async () => {
+      const createEntradaP = async (entradaP) => {
         try {
-          const res = await createEntradaProductRequest()
+          const res = await createEntradaProductRequest(entradaP)
           setEntrada([...entrada, res.data]);
           console.log(res.data)
         } catch (error) {

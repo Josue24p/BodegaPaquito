@@ -1,33 +1,60 @@
-import { Button, Grid, TextField, Typography } from '@mui/material'
+import { Button, FormControl, Grid, InputLabel, MenuItem, Select, TextField, Typography } from '@mui/material'
 import { useForm } from 'react-hook-form';
 import { useEntradaProduct } from '../context/EntradaProdContex';
+import { useProveedor } from '../context/ProveedorContext';
+import { useProduct } from '../context/ProductContext';
+import { useCategoria } from '../context/CategoriaContext';
+import { useEffect, useState } from 'react';
 
 
-function EntradaProdForm({entrada}) {
-    const { register, handleSubmit, reset } = useForm();
-    const { createEntradaP } = useEntradaProduct();
+function EntradaProdForm(/* {entrada} */) {
+    const { register, handleSubmit, reset, setValue } = useForm();
+    const { createEntradaP, getEntradaP } = useEntradaProduct();
+
+
+    const {proveedor, getProveedor} = useProveedor();
+    const [proveedores, setProveedores] = useState('');
+
+    const {product, getProduct} = useProduct();
+    const [productos, setProductos] = useState('');
+
+    const { categoria, getCategoria } = useCategoria();
+    const [categories, setCategories] = useState('')
 
     const submit = async (data) => {
         try {
+            console.log(data)
+            data.cantidad = parseInt(data.cantidad, 10);
+            data.FechaEntrada = new Date(data.FechaEntrada);
             await createEntradaP(data);
+            setCategories('');
+            setProveedores('');
+            setProductos('');
+            await getEntradaP();
             reset();
         } catch (error) {
             console.log(error)
         }
     }
 
-    /*   const obtenerCategoria = async()=>{
-          try {
-              let res = await getProduct();
-              let categoria = res.map((cat)=>(
-                  cat.IdCategoria
-              ))
-              console.log(categoria)
-          } catch (error) {
-              console.log(error)
-          }
-      } */
+    const handleProveedorChange = (event) => {
+        setProveedores(event.target.value);
+        setValue('IdProveedor', event.target.value)
+    }
+    const handleProductoChange = (event) => {
+        setProductos(event.target.value);
+        setValue('IdProducto', event.target.value)
+    }
+    const handleCategoryChange = (event) => {
+        setCategories(event.target.value);
+        setValue('IdCategoria', event.target.value)
+    }
 
+    useEffect(()=>{
+        getProveedor();
+        getProduct();
+        getCategoria();
+    },[])
     return (
         <Grid 
         component={"form"}
@@ -48,37 +75,63 @@ function EntradaProdForm({entrada}) {
             fontSize: '2em',
             textAlign: 'initial',
             }}>Entrada Productos</Typography>
-            <TextField
-            {...register('IdProveedor', { required: true })}
-            id='IdProveedor'
-            label='IdProveedor'
-            type='text'
-            variant='outlined'
-            fullWidth
-            helperText='Ingrese un IdProveedor válido'
-            error={false}
-            />
-            <TextField
-            {...register('IdProducto', { required: true })}
-            id='IdProducto'
-            label='IdProducto'
-            type='number'
-            variant='outlined'
-            fullWidth
-            helperText='Ingrese un IdProducto válido'
-            error={false}
-            />
-            <TextField
-            {...register('IdCategoria', { required: true })}
-            id='IdCategoria'
-            label='IdCategoria'
-            type='text'
-            variant='outlined'
-            autoFocus
-            fullWidth
-            helperText='Ingrese una categoría válida'
-            error={false}
-            />
+            <FormControl fullWidth variant="outlined" margin="normal">
+                <InputLabel 
+                id="proveedor-label">Proveedor</InputLabel>
+                <Select
+                 {...register('IdProveedor', { required: true })}
+                    labelId="proveedor-label"
+                    id="IdProveedor"
+                    value={proveedores}
+                    onChange={handleProveedorChange}
+                    label="Proveedor"
+                    required
+                >
+                    {proveedor.map((pro) => (
+                        <MenuItem key={pro.IdProveedor} value={pro.IdProveedor}>
+                            {pro.Nombre}
+                        </MenuItem>
+                    ))}
+                </Select>
+            </FormControl>
+            <FormControl fullWidth variant="outlined" margin="normal">
+                <InputLabel 
+                id="producto-label">Producto</InputLabel>
+                <Select
+                 {...register('IdProducto', { required: true })}
+                    labelId="producto-label"
+                    id="IdProducto"
+                    value={productos}
+                    onChange={handleProductoChange}
+                    label="Producto"
+                    required
+                >
+                    {product.map((prod) => (
+                        <MenuItem key={prod.IdProducto} value={prod.IdProducto}>
+                            {prod.Nombre}
+                        </MenuItem>
+                    ))}
+                </Select>
+            </FormControl>
+            <FormControl fullWidth variant="outlined" margin="normal">
+                <InputLabel 
+                id="categoria-label">Categoria</InputLabel>
+                <Select
+                 {...register('IdCategoria', { required: true })}
+                    labelId="categoria-label"
+                    id="IdCategoria"
+                    value={categories}
+                    onChange={handleCategoryChange}
+                    label="categoria"
+                    required
+                >
+                    {categoria.map((cat) => (
+                        <MenuItem key={cat.IdCategoria} value={cat.IdCategoria}>
+                            {cat.Nombre}
+                        </MenuItem>
+                    ))}
+                </Select>
+            </FormControl>
             <TextField
             {...register('cantidad', { required: true })}
             id='cantidad'
