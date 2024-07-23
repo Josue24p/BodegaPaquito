@@ -1,5 +1,5 @@
 import { createContext, useContext, useState } from "react";
-import { getProductoRequest , createProductoRequest  } from '../api/producto';
+import { getProductoRequest , createProductoRequest, updateProductoRequest, deleteProductoRequest } from '../api/producto';
 
 
 const ProductContext = createContext();
@@ -37,12 +37,34 @@ export function ProductProvider({ children }) {
     }
   }
 
+  const updateProduct = async (id, producto) => {
+    try {
+      const res = await updateProductoRequest(id, producto)
+      console.log(res.data)
+    } catch (error) {
+      console.log(error)
+    }
+  }
+
+  const deleteProducto = async (id) => {
+    try {
+      const res = await deleteProductoRequest(id)
+      if (res.status==204) {
+        setProduct(product.filter(pro => pro.IdProducto != id))
+      }
+    } catch (error) {
+      console.log(error)
+    }
+  }
+
   return (
     <ProductContext.Provider
       value={{
         product,
         getProduct,
-        createProduct
+        createProduct,
+        updateProduct,
+        deleteProducto
       }}
     >
       {children}
