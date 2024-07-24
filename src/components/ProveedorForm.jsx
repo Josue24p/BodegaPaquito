@@ -2,43 +2,61 @@ import { Button, Grid, TextField, Typography } from '@mui/material'
 import { useProveedor } from '../context/ProveedorContext';
 
 import { useForm } from 'react-hook-form';
+import { useNavigate, useParams } from 'react-router-dom';
+import { useEffect } from 'react';
 
 function ProveedorForm() {
 
-  const { register, handleSubmit, reset } = useForm();
-  const {createProveedor, getProveedor}= useProveedor();
-  /* const [proveedor, setProveedor] = React.useState([]); */
+  const { register, handleSubmit, reset, setValue } = useForm();
+  const {createProveedor, getProveedor,getProveedorById, updateProveedor}= useProveedor();
+  const params = useParams()
+  const navigate = useNavigate()
 
-  /* 
-      const handleChange = (e) => {
-        setFormData({
-          ...formData,
-          [e.target.name]: e.target.value,
-        });
-      }; */
+  /*Función de confirmar el registro, la funcionalidad se basa en traer la data
+    como parametro. Se valida una condicional, si se recibe un parametro id, quiere decir, si 
+    se edita un proveedor especifico, se ejecuta la función de actualizar, en caso no,
+    se ejecuta la función de crear un nuevo proveedor que recibe el parametro de la 
+    data que se está enviando en el formulario, luego de crear, también se ejecuta la función de listar
+    todos los proveedores, luego se limpia los valores escritos en el formulario.
+    Por último redirige a la vista proveedor.
+    */
   const submit = async(data) => {
+    // Validar los datos
     try {
-     await createProveedor(data);
-     await getProveedor()
-      reset()
+      if(params.id){
+        await updateProveedor(params.id, data)
+      }else{
+        await createProveedor(data);
+        await getProveedor()
+        reset()
+      }
+      navigate('/proveedor')
     } catch (error) {
       console.error(error);
     }
   };
 
-  /*  const createProveedor = async (provedors) => {
-     try {
-       const res = await createProveedorRequest(provedors)
-       setProveedor([...proveedor,res.data])
-       reset()
-     } catch (error) {
-       console.log(error)
-     }
-   } */
+  /* Usar useEffect con una función de cargar el proveedor seleccionado,
+    esto va relacionado con el botón de editar de la tabla de proveedores,
+    al editar un proveedor, se carga sus datos con esta función.
+    */
+  //los nombres del setValue tiene que ser lo mismo que el id de cada input(TextField)
+  useEffect(()=>{
+    async function cargarProveedor(){
+        if(params.id){
+            const proveedor = await getProveedorById(params.id)
+            console.log(proveedor)
+            //ver los valores obtenidos
+            setValue('nombre', proveedor.Nombre)
+            setValue('ruc', proveedor.RUC)
+            setValue('direccion', proveedor.Direccion)
+            setValue('telefono', proveedor.Telefono)
+            setValue('correo', proveedor.Correo)
+        }
+    }
+    cargarProveedor()
+},[])
 
-  /* const onSubmit = handleSubmit ((data) => {
-    createProveedor(data);
-  }); */
   return (
     <Grid
       component={"form"}
@@ -50,8 +68,9 @@ function ProveedorForm() {
         borderRadius: '10px',
         boxShadow: '0 0 10px rgba(0, 0, 0, 0.1)',
         margin: 0,
-        ml: 20,
+        ml: 2,
         mt: 4,
+        mr: 1,
         padding: 4,
         width: { xs: '100%', md: '500px' },
         height: { xs: '100%', md: '550px' }
@@ -94,7 +113,9 @@ function ProveedorForm() {
         error={false}
       />
       <TextField
-        {...register('telefono', { required: true })}
+        {...register('telefono', { 
+          required: true, 
+        })}
         id='telefono'
         label='Teléfono'
         type='text'
@@ -124,7 +145,7 @@ function ProveedorForm() {
             backgroundColor: 'blueviolet',
           },
           borderRadius: '10px',
-        }}>Registrarme</Button>
+        }}>Registrar</Button>
     </Grid>
   )
 }
