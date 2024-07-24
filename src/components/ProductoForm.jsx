@@ -4,48 +4,82 @@ import { useForm } from 'react-hook-form';
 import { useProduct } from '../context/ProductContext';
 import { useCategoria } from '../context/CategoriaContext';
 import { useEffect, useState } from 'react';
+import { useNavigate, useParams } from 'react-router-dom';
 
 
 function ProductoForm(/* { product } */) {
     const { register, handleSubmit, reset, setValue } = useForm();
-    const { createProduct, getProduct } = useProduct();
+    const { createProduct, getProduct,getProductoById, updateProduct } = useProduct();
     const { categoria, getCategoria } = useCategoria();
     const [categories, setCategories] = useState('')
-
+    const params = useParams()
+    const navigate = useNavigate()
+   
+    
+    /*Función de confirmar el registro, la funcionalidad se basa en traer la data
+    como parametro. Primero se parsea el stock y precio a int y decimal,
+    luego se valida una condicional, si se recibe un parametro id, quiere decir, si 
+    se edita un producto especifico, se ejecuta la función de actualizar, en caso no,
+    se ejecuta la función de crear un nuevo producto que recibe el parametro de la 
+    data que se está enviando en el formulario, luego de crear, se actualiza el estado
+    de la categoria seleccionada a null, también se ejecuta la función de listar
+    todos los productos, luego se limpia los valores escritos en el formulario.
+    Por último redirige a la vista producto.
+    */
     const submit = async (data) => {
-        console.log(data)
+        // Validar los datos
         try {
             data.stock = parseInt(data.stock, 10); // Convertir a entero
             data.precio = parseFloat(data.precio, 10.2); // Convertir a flotante
-            await createProduct(data);
-            setCategories('')
-            await getProduct()
-            reset();
+                
+            if(params.id){
+                await updateProduct(params.id,data)
+            }else{
+                await createProduct(data);
+                setCategories('')
+                await getProduct()
+                reset();
+            }
+            navigate('/producto')
         } catch (error) {
             console.log(error)
         }
     }
 
-    /* const obtenerCategoria = async () => {
-        try {
-            let res = await getCategoria();
+    /*Función para poder guardar el estado de la Categoria*/
+    const handleCategoryChange = (event) => {
+        setCategories(event.target.value);
+        setValue('idCategoria',event.target.value)
+    }
 
-            console.log(res)
-        } catch (error) {
-            console.log(error)
+    /* Usar useEffect con una función de cargar el producto seleccionado,
+    esto va relacionado con el botón de editar de la tabla de productos,
+    al editar un producto, se carga sus datos con esta función.
+    */
+    useEffect(()=>{
+        async function cargarProducto(){
+            if(params.id){
+                const producto = await getProductoById(params.id)
+                console.log(producto)
+                //ver los valores obtenidos
+                setValue('idCategoria',producto.IdCategoria)
+                setValue('nombre',producto.Nombre)
+                setValue('descripcion',producto.Descripcion)
+                setValue('stock',producto.Stock)
+                setValue('precio',producto.Precio)
+                setCategories(producto.IdCategoria)
+            }
         }
-    } */
+        cargarProducto()
+    },[])
+
 
     useEffect(() => {
         getCategoria()
     }, [])
 
 
-    const handleCategoryChange = (event) => {
-        setCategories(event.target.value);
-        setValue('idCategoria',event.target.value)
-    }
-
+   
     return (
         <Grid
             component={"form"}
@@ -56,7 +90,8 @@ function ProductoForm(/* { product } */) {
                 borderRadius: '10px',
                 boxShadow: '0 0 10px rgba(0, 0, 0, 0.1)',
                 margin: 0,
-                ml: 1,
+                ml: 2,
+                mr: 1,
                 padding: 2,
                 width: { xs: '100%', md: '500px' },
                 height: { xs: '100%', md: '550px' }
