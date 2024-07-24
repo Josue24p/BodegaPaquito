@@ -16,6 +16,7 @@ import { Grid  } from '@mui/material';
 import ProductoForm from '../components/ProductoForm';
 import { useProduct } from '../context/ProductContext';
 import { useEffect } from 'react';
+import { Link } from 'react-router-dom';
 
 
 const StyledTableCell = styled(TableCell)(({ theme }) => ({
@@ -115,17 +116,18 @@ function Producto() {
                     <StyledTableCell align="right">{product.Stock}</StyledTableCell>
                     <StyledTableCell align="right">{product.Precio}</StyledTableCell>
                     <StyledTableCell align="right">
-                      <Button sx={{
+                    <Link to={`/producto/${product.IdProducto}`}>
+                    <Button sx={{
                         minWidth: '30px',
                         backgroundColor: 'green',
                         color: 'black',
                         ':hover':{
                           backgroundColor: 'orange'
                         }
-                      }} 
-                      
+                      }}
                       variant='contained'><EditIcon/>
                       </Button>
+                      </Link>
                     </StyledTableCell>
                     <StyledTableCell align="right">
                       <Button sx={{
