@@ -1,4 +1,4 @@
-import * as React from 'react';
+
 import { styled } from '@mui/material/styles';
 import Table from '@mui/material/Table';
 import TableBody from '@mui/material/TableBody';
@@ -9,9 +9,13 @@ import TableRow from '@mui/material/TableRow';
 import Paper from '@mui/material/Paper';
 import Sidebar from '../components/Sidebar';
 import Box from '@mui/material/Box';
-import { Grid, } from '@mui/material';
+import DeleteIcon from '@mui/icons-material/Delete';
+import EditIcon from '@mui/icons-material/Edit';
+import { Button, Grid, } from '@mui/material';
 import ProveedorForm from '../components/ProveedorForm';
 import { useProveedor } from '../context/ProveedorContext';
+import { Link } from 'react-router-dom';
+import { useEffect } from 'react';
 
 
 const StyledTableCell = styled(TableCell)(({ theme }) => ({
@@ -35,61 +39,50 @@ const StyledTableRow = styled(TableRow)(({ theme }) => ({
 }));
 
 
-/* function createData(IdProveedor, nombre, ruc, direccion, telefono, correo) {
-  return { IdProveedor, nombre, ruc, direccion, telefono, correo };
-} */
-
-/* const rows = [
-  createData('Frozen yoghurt', 159, 6.0, 24, 4.0, 5),
-  createData('Ice cream sandwich', 237, 9.0, 37, 4.3, 5),
-  createData('Eclair', 262, 16.0, 24, 6.0, 5),
-  createData('Cupcake', 305, 3.7, 67, 4.3, 5),
-  createData('Gingerbread', 356, 16.0, 49, 3.9, 5),
-]; */
-
-
-
-
-
 function Proveedor() {
-const {getProveedor, proveedor} = useProveedor();
+  const { getProveedor, deleteProveedor, proveedor } = useProveedor();
 
-React.useEffect(()=>{
-getProveedor()
-},[])
-if(proveedor.length === 0) return <h1>No proveedores</h1>
+  useEffect(() => {
+    getProveedor()
+  }, [])
+  if (proveedor.length === 0) return <h1>No proveedores</h1>
   return (
     <Box
       sx={{
         display: 'flex',
         flexDirection: { xs: 'column', md: 'row' },
-        
+
       }}
     >
 
       <Sidebar />
       <Grid
-      component={'main'}
+        component={'main'}
         container spacing={2}
         sx={{
           /* border: '1px solid blue', */
-          mt: {xs:9, md:9},
-          ml: {xs: 10, md: 1},
-          mr: {xs: 1, md: 1},
-          p: {xs: 2, md: 2},
-          width: {xs: '100%', md:'100%'},
+          mt: { xs: 9, md: 9 },
+          ml: { xs: 10, md: 1 },
+          mr: { xs: 1, md: 1 },
+          p: { xs: 1, md: 2 },
+          width: { xs: '100%', md: '100%' },
+          height: { xs: '100%', md: '100%' },
         }}
       >
-        <Grid 
-        sx={{
-          /* border: '1px solid red', */
-          margin: {xs: 0, md: 0},
-          p: {xs: 1, md: 2},
-          width: {xs: '100%', md:'900px'}
-        }}
+        <Grid
+          sx={{
+            /* border: '1px solid red', */
+            margin: { xs: 0, md: 0 },
+            p: { xs: 1, md: 2 },
+            width: { xs: '100%', md: '1000px' },
+            height: { xs: '400px', md: '100%' },
+            ml: { xs: 0, md: 0 },
+            mr: { xs: 2, md: 15 },
+            mb: { xs: 2, md: 2 }
+          }}
         >
-          <TableContainer component={Paper}>
-            <Table sx={{ minWidth: 700 }} aria-label="customized table">
+          <TableContainer sx={{ width: { xs: '100%' }, height: { xs: '380px', md: '100%' } }} component={Paper}>
+            <Table aria-label="customized table">
               <TableHead>
                 <TableRow>
                   <StyledTableCell>IdProveedor</StyledTableCell>
@@ -98,26 +91,58 @@ if(proveedor.length === 0) return <h1>No proveedores</h1>
                   <StyledTableCell align="right">Direccion</StyledTableCell>
                   <StyledTableCell align="right">Telefono</StyledTableCell>
                   <StyledTableCell align="right">Correo</StyledTableCell>
+                  <StyledTableCell align="right"></StyledTableCell>
+                  <StyledTableCell align="right"></StyledTableCell>
                 </TableRow>
               </TableHead>
               <TableBody>
-                {proveedor.map((pro) => (
-                  <StyledTableRow key={`${pro.IdProveedor}`}>
+                {proveedor.map((proveedor) => (
+                  <StyledTableRow key={`${proveedor.IdProveedor}`}>
                     <StyledTableCell component="th" scope="row">
-                      {pro.IdProveedor}
+                      {proveedor.IdProveedor}
                     </StyledTableCell>
-                    <StyledTableCell align="right">{pro.Nombre}</StyledTableCell>
-                    <StyledTableCell align="right">{pro.RUC}</StyledTableCell>
-                    <StyledTableCell align="right">{pro.Direccion}</StyledTableCell>
-                    <StyledTableCell align="right">{pro.Telefono}</StyledTableCell>
-                    <StyledTableCell align="right">{pro.Correo}</StyledTableCell>
+                    <StyledTableCell align="right">{proveedor.Nombre}</StyledTableCell>
+                    <StyledTableCell align="right">{proveedor.RUC}</StyledTableCell>
+                    <StyledTableCell align="right">{proveedor.Direccion}</StyledTableCell>
+                    <StyledTableCell align="right">{proveedor.Telefono}</StyledTableCell>
+                    <StyledTableCell align="right">{proveedor.Correo}</StyledTableCell>
+                    <StyledTableCell align="right">
+                    <Link to={`/proveedor/${proveedor.IdProveedor}`}>
+                    <Button sx={{
+                        minWidth: '30px',
+                        backgroundColor: 'green',
+                        color: 'black',
+                        ':hover':{
+                          backgroundColor: 'orange'
+                        }
+                      }}    
+                      variant='contained'><EditIcon/>
+                      </Button>
+                    </Link>
+                    </StyledTableCell>
+                    <StyledTableCell align="right">
+                      <Button sx={{
+                        minWidth: '30px',
+                        backgroundColor: 'blueviolet',
+                        color: 'white',
+                        ':hover':{
+                          backgroundColor: 'red'
+                        }
+                      }}
+                      onClick={async()=>{
+                        await deleteProveedor(proveedor.IdProveedor)
+                        await getProveedor()
+                      }}
+                        variant='contained'><DeleteIcon/>
+                      </Button>
+                      </StyledTableCell>
                   </StyledTableRow>
                 ))}
               </TableBody>
             </Table>
           </TableContainer>
         </Grid>
-              <ProveedorForm proveedor={proveedor}/>
+        <ProveedorForm key={proveedor.IdProveedor} proveedor = {proveedor} />
       </Grid>
 
     </Box>
