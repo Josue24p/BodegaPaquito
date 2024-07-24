@@ -1,5 +1,5 @@
 import { createContext, useContext, useState } from "react";
-import { createProveedorRequest, getProveedorRequest } from '../api/proveedor';
+import { createProveedorRequest, deleteProveedorRequest, getProveedorByIdRequest, getProveedorRequest, updateProveedorRequest } from '../api/proveedor';
 
 
 const ProveedorContext = createContext();
@@ -25,6 +25,16 @@ export function ProveedorProvider({ children }) {
     }
   }
 
+  const getProveedorById = async (id) => {
+    try {
+      const res = await getProveedorByIdRequest(id)
+      console.log(res.data)
+      return res.data
+    } catch (error) {
+      console.log(error)
+    }
+  }
+
   const createProveedor = async (provedors) => {
     try {
       const res = await createProveedorRequest(provedors)
@@ -35,12 +45,35 @@ export function ProveedorProvider({ children }) {
     }
   }
 
+  const updateProveedor = async (id, proveedors) => {
+    try {
+      const res = await updateProveedorRequest(id, proveedors)
+      console.log(res.data)
+    } catch (error) {
+      console.log(error)
+    }
+  }
+
+  const deleteProveedor = async (id) => {
+    try {
+      const res = await deleteProveedorRequest(id)
+      if (res.status==204) {
+        setProveedor(proveedor.filter(proveedor => proveedor.IdProveedor != id))
+      }
+    } catch (error) {
+      console.log(error)
+    }
+  }
+
   return (
     <ProveedorContext.Provider
       value={{
         proveedor,
         getProveedor,
-        createProveedor
+        getProveedorById,
+        createProveedor,
+        updateProveedor,
+        deleteProveedor,
       }}
     >
       {children}
