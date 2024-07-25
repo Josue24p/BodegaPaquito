@@ -1,5 +1,5 @@
 import { createContext, useContext, useState } from "react";
-import {getSalidaProductRequest, createSalidaProdRequest} from '../api/salidaProd';
+import {getSalidaProductRequest, createSalidaProdRequest, getSalidaById, updateSalidaProdRequest, deleteSalidaProdRequest} from '../api/salidaProd';
 
 const SalidaProductContext = createContext();
 
@@ -27,22 +27,54 @@ export function SalidaProductProvider({ children }){
         }
       }
     
-      const createSalidaP = async () => {
+    const getSalidaId = async (id) => {
+      try {
+        const res = await getSalidaById(id)
+        console.log(res.data)
+        return res.data
+      } catch (error) {
+        console.log(error)
+      }
+    }
+
+    const createSalidaP = async (salida) => {
         try {
-          const res = await createSalidaProdRequest()
-          setSalida([...salida, res.data]);
+          const res = await createSalidaProdRequest(salida)
+          setSalida((prevSalida)=>[...prevSalida, res.data]);
           console.log(res.data)
         } catch (error) {
           console.log(error)
         }
       }
     
+    const updateSalidaP = async (id, salida) => {
+      try {
+        const res = await updateSalidaProdRequest(id, salida)
+        console.log(res.data)
+      } catch (error) {
+        console.log(error)
+      }
+    }
+    
+    const deleteSalidaP = async (id) => {
+      try {
+        const res = await deleteSalidaProdRequest(id)
+        if (res.status === 204){
+          setSalida(salida.filter(sal => sal.IdSalida !== id))
+        }
+      } catch (error) {
+        console.log(error)
+      }
+    }
       return (
         <SalidaProductContext.Provider
           value={{
             salida,
             getSalidaP,
-            createSalidaP
+            getSalidaId,
+            createSalidaP,
+            updateSalidaP,
+            deleteSalidaP
           }}
         >
           {children}
