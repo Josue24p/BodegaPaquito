@@ -15,9 +15,10 @@ import Button from '@mui/material/Button';
 import { Grid  } from '@mui/material';
 import ProductoForm from '../components/ProductoForm';
 import { useProduct } from '../context/ProductContext';
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
-
+import Snackbar from '@mui/material/Snackbar';
+import Alert from '@mui/material/Alert';
 
 const StyledTableCell = styled(TableCell)(({ theme }) => ({
   [`&.${tableCellClasses.head}`]: {
@@ -49,6 +50,31 @@ const StyledTableRow = styled(TableRow)(({ theme }) => ({
 
 function Producto() {
   const {getProduct, deleteProducto ,product} = useProduct();
+
+  const [snackbarOpen, setSnackbarOpen] = useState(false);
+
+  const [snackbarMessage, setSnackbarMessage] = useState('');
+
+  const [snackbarSeverity, setSnackbarSeverity] = useState('success');
+
+  const handleDelete = async(id) => {
+    try {
+      const eliminar = await deleteProducto(id);
+      if (eliminar == 200){
+        setSnackbarMessage('Eliminado con éxito');
+        setSnackbarSeverity('success');
+        await getProduct();
+      }else{
+        setSnackbarMessage(`No se puede eliminar el producto con ID ${id}, primero elimine las relaciones en la otra tabla.`);
+        setSnackbarSeverity('error');
+      }
+    } catch (error) {
+      console.log(error)
+    }finally{
+      setSnackbarOpen(true);
+    }
+    
+  }
 
   useEffect(() => {
     getProduct();
@@ -138,10 +164,7 @@ function Producto() {
                           backgroundColor: 'red'
                         }
                       }}
-                      onClick={async()=>{
-                        await deleteProducto(product.IdProducto)
-                        await getProduct()
-                      }}
+                      onClick={async()=>handleDelete(product.IdProducto)}
                         variant='contained'><DeleteIcon/>
                       </Button></StyledTableCell>
                   </StyledTableRow>
@@ -152,7 +175,20 @@ function Producto() {
         </Grid>
                 <ProductoForm key={product.IdProducto} product ={product}/>
       </Grid>
-
+      <Snackbar
+      open={snackbarOpen}
+      autoHideDuration={6000}
+      onClose={()=> setSnackbarOpen(false)}
+      anchorOrigin={{vertical: 'top', horizontal: 'center'}}
+      >
+        <Alert 
+        onClose={()=> setSnackbarOpen(false)}
+        severity={snackbarSeverity}
+        sx={{width:'100%'}}
+        >
+          {snackbarMessage}
+        </Alert>
+      </Snackbar>
     </Box>
   );
 }
