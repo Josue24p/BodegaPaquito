@@ -1,5 +1,5 @@
 import { createContext, useContext, useState } from "react";
-import {getCategoriaRequest} from '../api/categoria';
+import {createCategoriaRequest, deleteCategoriaRequest, getCategoriaByIdRequest, getCategoriaRequest, updateCategoriaRequest} from '../api/categoria';
 
 const CategoriaContext = createContext();
 
@@ -19,15 +19,63 @@ export function CategoriaProvider({children}){
         try{
             const res = await getCategoriaRequest();
             setCategoria(res.data);
-            console.log(res.data)
+            /* console.log(res.data) */
             return res.data
         } catch(error){
             console.error('Error getting categorias:', error);
         }
     }
 
+    const getCategoriaById = async (id) => {
+        try{
+            const res = await getCategoriaByIdRequest(id);
+            console.log(res.data)
+            return res.data
+        } catch(error){
+            console.error('Error getting categoria:', error);
+        }
+    }
+
+    const createCategoria = async (categoria) => {
+        try {
+            const res = await createCategoriaRequest(categoria)
+            setCategoria((prevCategoria)=>[...prevCategoria, res.data])
+            console.log(res.data)
+        } catch (error) {
+            console.log(error)
+        }
+    }
+    
+    const updateCategoria = async (id, categoria) => {
+        try {
+            const res = await updateCategoriaRequest(id, categoria)
+            console.log(res.data)
+        } catch (error) {
+           console.log(error) 
+        }
+    }
+
+    const deleteCategoria = async (id) => {
+        try {
+            const res = await deleteCategoriaRequest(id)
+            if(res.status == 204){
+                setCategoria(categoria.filter(cat => cat.IdCategoria != id))
+            }
+        } catch (error) {
+            console.log(error)
+        }
+    }
+
     return (
-        <CategoriaContext.Provider value={{ categoria, getCategoria }}>
+        <CategoriaContext.Provider 
+        value={{
+          categoria,
+          getCategoria,
+          getCategoriaById,
+          createCategoria,
+          updateCategoria,
+          deleteCategoria,
+        }}>
             {children}
         </CategoriaContext.Provider>
     )
