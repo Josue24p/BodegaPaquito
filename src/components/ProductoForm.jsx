@@ -1,4 +1,4 @@
-import { Button, FormControl, Grid, InputLabel, Select, TextField, Typography } from '@mui/material'
+import { Alert, Box, Button, FormControl, Grid, InputLabel, Select, Snackbar, TextField, Typography } from '@mui/material'
 import MenuItem from '@mui/material/MenuItem';
 import { useForm } from 'react-hook-form';
 import { useProduct } from '../context/ProductContext';
@@ -14,7 +14,17 @@ function ProductoForm(/* { product } */) {
     const [categories, setCategories] = useState('')
     const params = useParams()
     const navigate = useNavigate()
-   
+
+    /*Agregar mensaje de confirmación que se creo el registro*/
+    /*snackbarOpen será para poder mostrar el mensaje, setSnackbarOpen maneja el estado
+    del mensaje, si es true se muestra, si es false se quita*/
+    const [snackbarOpen, setSnackbarOpen] = useState(false);
+
+    /*Estado para poder almacenar el mensaje a mostrar*/
+    const [snackbarMessage, setSnackbarMessage] = useState('');
+
+    /*Estado para guardar el tipo de mensaje si es success o error, entre otros.*/
+    const [snackbarSeverity, setSnackbarSeverity] = useState('success');
     
     /*Función de confirmar el registro, la funcionalidad se basa en traer la data
     como parametro. Primero se parsea el stock y precio a int y decimal,
@@ -34,12 +44,17 @@ function ProductoForm(/* { product } */) {
                 
             if(params.id){
                 await updateProduct(params.id,data)
+                setSnackbarMessage('Actualizado con éxito');
+                setSnackbarSeverity('success');
             }else{
                 await createProduct(data);
+                setSnackbarMessage('Creado con éxito');
+                setSnackbarSeverity('success');
                 setCategories('')
                 await getProduct()
                 reset();
             }
+            setSnackbarOpen(true);
             navigate('/producto')
         } catch (error) {
             console.log(error)
@@ -94,7 +109,7 @@ function ProductoForm(/* { product } */) {
                 mr: 1,
                 padding: 2,
                 width: { xs: '100%', md: '500px' },
-                height: { xs: '100%', md: '550px' }
+                height: { xs: '100%', md: '100%' }
             }}
         >
             <Typography sx={{
@@ -113,6 +128,7 @@ function ProductoForm(/* { product } */) {
                     onChange={handleCategoryChange}
                     label="Categoría"
                     required
+                    sx={{ mb: 2 }}
                 >
                     {categoria.map((cat) => (
                         <MenuItem key={cat.IdCategoria} value={cat.IdCategoria}>
@@ -131,6 +147,7 @@ function ProductoForm(/* { product } */) {
                 fullWidth
                 helperText='Ingrese un nombre válido'
                 error={false}
+                sx={{ mb: 2 }}
             />
             
             <TextField
@@ -142,6 +159,7 @@ function ProductoForm(/* { product } */) {
                 fullWidth
                 helperText='Ingrese un descripcion válido'
                 error={false}
+                sx={{ mb: 2 }}
             />
             <TextField
                 {...register('stock', { required: true })}
@@ -152,6 +170,7 @@ function ProductoForm(/* { product } */) {
                 fullWidth
                 helperText='Ingrese un stock válido'
                 error={false}
+                sx={{ mb: 2 }}
             />
             <TextField
                 {...register('precio', { required: true })}
@@ -166,18 +185,37 @@ function ProductoForm(/* { product } */) {
                     step: "0.01" // Permite la entrada de decimales
                 }}
             />
-            <Button
-                type='submit'
-                variant='outlined'
-                sx={{
-                    mt: 2,
-                    color: 'white',
-                    backgroundColor: 'cornflowerblue',
-                    '&:hover': {
-                        backgroundColor: 'blueviolet',
-                    },
-                    borderRadius: '10px',
-                }}>Registrarme</Button>
+            <Box sx={{ display: 'flex', justifyContent: 'center', mt: 0 }}>
+                <Button
+                    type="submit"
+                    variant="outlined"
+                    sx={{
+                        mt: 1,
+                        color: 'white',
+                        backgroundColor: 'cornflowerblue',
+                        '&:hover': {
+                            backgroundColor: 'blueviolet',
+                        },
+                        borderRadius: '10px',
+                    }}
+                >
+                    Registrar
+                </Button>
+            </Box>
+                <Snackbar
+                open={snackbarOpen}
+                autoHideDuration={6000}
+                onClose={() => setSnackbarOpen(false)}
+                anchorOrigin={{ vertical: 'top', horizontal: 'center' }}
+            >
+                <Alert
+                    onClose={() => setSnackbarOpen(false)}
+                    severity={snackbarSeverity}
+                    sx={{ width: '100%' }}
+                >
+                    {snackbarMessage}
+                </Alert>
+            </Snackbar>
         </Grid>
     )
 }
