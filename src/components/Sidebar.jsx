@@ -16,7 +16,7 @@ import ListItem from '@mui/material/ListItem';
 import ListItemButton from '@mui/material/ListItemButton';
 import ListItemIcon from '@mui/material/ListItemIcon';
 import ListItemText from '@mui/material/ListItemText';
-import InboxIcon from '@mui/icons-material/MoveToInbox';
+import InventoryTwoToneIcon from '@mui/icons-material/InventoryTwoTone';
 import DashboardIcon from '@mui/icons-material/Dashboard';
 import InventoryIcon from '@mui/icons-material/Inventory';
 import ExpandLess from '@mui/icons-material/ExpandLess';
@@ -28,7 +28,7 @@ import DeliveryDiningIcon from '@mui/icons-material/DeliveryDining';
 import AddShoppingCartIcon from '@mui/icons-material/AddShoppingCart';
 import {useNavigate} from 'react-router-dom'
 import { Button } from '@mui/material';
-
+import { BiCategory } from "react-icons/bi";
 const drawerWidth = 240;
 
 const openedMixin = (theme) => ({
@@ -237,7 +237,7 @@ export default function Sidebar() {
                 </Collapse>
             </ListItem>
 
-            <ListItem disablePadding sx={{ display: 'block' }} onClick={()=>(navigate())}>
+            <ListItem disablePadding sx={{ display: 'block' }} onClick={()=>(navigate('/inventario'))}>
               <ListItemButton
                 sx={{
                   minHeight: 48,
@@ -252,9 +252,29 @@ export default function Sidebar() {
                     justifyContent: 'center',
                   }}
                 >
-                   <InboxIcon /> 
+                   <InventoryTwoToneIcon /> 
                 </ListItemIcon>
-                <ListItemText primary="Vista2" sx={{ opacity: open ? 1 : 0 }} />
+                <ListItemText primary="Inventario" sx={{ opacity: open ? 1 : 0 }} />
+              </ListItemButton>
+            </ListItem>
+            <ListItem disablePadding sx={{ display: 'block' }} onClick={()=>(navigate('/categoria'))}>
+              <ListItemButton
+                sx={{
+                  minHeight: 48,
+                  justifyContent: open ? 'initial' : 'center',
+                  px: 2.5,
+                }}
+              >
+                <ListItemIcon
+                  sx={{
+                    minWidth: 0,
+                    mr: open ? 3 : 'auto',
+                    justifyContent: 'center',
+                  }}
+                >
+                   <BiCategory /> 
+                </ListItemIcon>
+                <ListItemText primary="Inventario" sx={{ opacity: open ? 1 : 0 }} />
               </ListItemButton>
             </ListItem>
         </List>
