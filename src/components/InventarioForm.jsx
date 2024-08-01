@@ -1,4 +1,4 @@
-import { Box, Button, FormControl, Grid, InputLabel, MenuItem, Select, TextField, Typography } from '@mui/material'
+import { Alert, Box, Button, FormControl, Grid, InputLabel, MenuItem, Select, Snackbar, TextField, Typography } from '@mui/material'
 import { useForm } from 'react-hook-form';
 import { useProduct } from '../context/ProductContext';
 import { useEffect, useState } from 'react';
@@ -11,37 +11,54 @@ import { useInventario } from '../context/InventarioContext';
 function InventarioForm() {
     const { register, handleSubmit, reset, setValue } = useForm();
 
-    const {getInventario, getInventarioById, createInventario, updateInventario} = useInventario();
+    const { getInventario, getInventarioById, createInventario, updateInventario } = useInventario();
 
-    const {product, getProduct} = useProduct();
+    const { product, getProduct } = useProduct();
     const [productos, setProductos] = useState('');
 
-    const {categoria, getCategoria} = useCategoria();
+    const { categoria, getCategoria } = useCategoria();
     const [categories, setCategories] = useState('');
 
-    const {proveedor, getProveedor} = useProveedor();
+    const { proveedor, getProveedor } = useProveedor();
     const [proveedores, setProveedores] = useState('');
 
     const params = useParams();
     const navigate = useNavigate();
 
-    const submit = async (data) =>{
-        
+    /*Agregar mensaje de confirmación que se creo el registro*/
+    /*snackbarOpen será para poder mostrar el mensaje, setSnackbarOpen maneja el estado
+    del mensaje, si es true se muestra, si es false se quita*/
+    const [snackbarOpen, setSnackbarOpen] = useState(false);
+
+    /*Estado para poder almacenar el mensaje a mostrar*/
+    const [snackbarMessage, setSnackbarMessage] = useState('');
+
+    /*Estado para guardar el tipo de mensaje si es success o error, entre otros.*/
+    const [snackbarSeverity, setSnackbarSeverity] = useState('success');
+    
+    const submit = async (data) => {
+
         try {
             //validar los datos
-            if(params.id){
+            if (params.id) {
                 await updateInventario(params.id, data)
-            }else{
+                setSnackbarMessage('Actualizado con éxito');
+                setSnackbarSeverity('success');
+            } else {
                 await createInventario(data)
+                setSnackbarMessage('Creado con éxito');
+                setSnackbarSeverity('success');
                 setProductos('');
                 setCategories('');
                 setProveedores('');
                 await getInventario();
                 reset();
             }
+            setSnackbarOpen(true);
             navigate('/inventario');
         } catch (error) {
-            console.log(error)    
+            setSnackbarMessage(`No se puede crear el producto, ingrese bien los datos.`);
+            setSnackbarSeverity('error');
         }
     }
 
@@ -71,30 +88,30 @@ function InventarioForm() {
 
     /*Función para cargar los datos del Inventario al editar*/
     useEffect(() => {
-        async function cargarDatos(){
-            if(params.id){
+        async function cargarDatos() {
+            if (params.id) {
                 const inventario = await getInventarioById(params.id)
                 console.log(inventario)
-                    setValue('IdProducto', inventario.IdProducto)
-                    setValue('IdCategoria', inventario.IdCategoria)
-                    setValue('IdProveedor', inventario.IdProveedor)
-                    setValue('Stock', inventario.StockActual)
-                    setValue('Fecha',formatISODate(inventario.Fecha))
-                    setProductos(inventario.IdProducto)
-                    setCategories(inventario.IdCategoria)
-                    setProveedores(inventario.IdProveedor)
+                setValue('IdProducto', inventario.IdProducto)
+                setValue('IdCategoria', inventario.IdCategoria)
+                setValue('IdProveedor', inventario.IdProveedor)
+                setValue('Stock', inventario.StockActual)
+                setValue('Fecha', formatISODate(inventario.Fecha))
+                setProductos(inventario.IdProducto)
+                setCategories(inventario.IdCategoria)
+                setProveedores(inventario.IdProveedor)
             }
         }
         cargarDatos()
     }, [])
 
-    useEffect(()=>{
+    useEffect(() => {
         getProduct();
         getCategoria();
         getProveedor();
-    },[])
-  return (
-            <Grid
+    }, [])
+    return (
+        <Grid
             component={"form"}
             onSubmit={handleSubmit(submit)}
             sx={{
@@ -212,8 +229,22 @@ function InventarioForm() {
                     Registrar
                 </Button>
             </Box>
+            <Snackbar
+                open={snackbarOpen}
+                autoHideDuration={6000}
+                onClose={() => setSnackbarOpen(false)}
+                anchorOrigin={{ vertical: 'top', horizontal: 'center' }}
+            >
+                <Alert
+                    onClose={() => setSnackbarOpen(false)}
+                    severity={snackbarSeverity}
+                    sx={{ width: '100%' }}
+                >
+                    {snackbarMessage}
+                </Alert>
+            </Snackbar>
         </Grid>
-  )
+    )
 }
 
 export default InventarioForm
