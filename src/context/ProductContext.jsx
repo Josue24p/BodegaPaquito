@@ -30,7 +30,7 @@ export function ProductProvider({ children }) {
   const getProductoById = async (id) => {
     try {
       const res = await getProductByIdRequest(id)
-      console.log(res.data)
+      /* console.log(res.data) */
       return res.data
     } catch (error) {
       console.log(error)
@@ -40,7 +40,8 @@ export function ProductProvider({ children }) {
     try {
       const res = await createProductoRequest(producto)
       setProduct((prevProducts)=>[...prevProducts, res.data]);
-      console.log(res.data)
+      /* console.log(res.data) */
+      return res
     } catch (error) {
       console.log(error)
     }
@@ -49,7 +50,8 @@ export function ProductProvider({ children }) {
   const updateProduct = async (id, producto) => {
     try {
       const res = await updateProductoRequest(id, producto)
-      console.log(res.data)
+      /* console.log(res.data) */
+      return res
     } catch (error) {
       console.log(error)
     }
@@ -61,6 +63,7 @@ export function ProductProvider({ children }) {
       if (res.status==204) {
         setProduct(product.filter(pro => pro.IdProducto != id))
       }
+      return res
     } catch (error) {
       console.log(error)
     }
