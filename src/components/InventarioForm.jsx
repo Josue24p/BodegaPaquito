@@ -37,11 +37,11 @@ function InventarioForm() {
     const [snackbarSeverity, setSnackbarSeverity] = useState('success');
     
     const submit = async (data) => {
-
         try {
             //validar los datos
-            if (params.id) {
-                await updateInventario(params.id, data)
+            const param = params.id
+            if (param) {
+                await updateInventario(param, data)
                 setSnackbarMessage('Actualizado con éxito');
                 setSnackbarSeverity('success');
             } else {
@@ -55,10 +55,14 @@ function InventarioForm() {
                 reset();
             }
             setSnackbarOpen(true);
-            navigate('/inventario');
+            /*Agregar setTimeout para poder agregarle un tiempo de 1.5segundos de demora antes que se cambie de ruta */
+            setTimeout(() => {
+                navigate('/inventario');
+              }, 1500); // 1.5 segundos, puedes ajustar este tiempo según lo necesites
         } catch (error) {
             setSnackbarMessage(`No se puede crear el producto, ingrese bien los datos.`);
             setSnackbarSeverity('error');
+            setSnackbarOpen(true);
         }
     }
 
