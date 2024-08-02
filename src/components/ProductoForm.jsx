@@ -9,7 +9,7 @@ import { useNavigate, useParams } from 'react-router-dom';
 
 function ProductoForm(/* { product } */) {
     const { register, handleSubmit, reset, setValue } = useForm();
-    const { createProduct, getProduct,getProductoById, updateProduct } = useProduct();
+    const { createProduct, getProduct, getProductoById, updateProduct } = useProduct();
     const { categoria, getCategoria } = useCategoria();
     const [categories, setCategories] = useState('')
     const params = useParams()
@@ -25,7 +25,7 @@ function ProductoForm(/* { product } */) {
 
     /*Estado para guardar el tipo de mensaje si es success o error, entre otros.*/
     const [snackbarSeverity, setSnackbarSeverity] = useState('success');
-    
+
     /*Función de confirmar el registro, la funcionalidad se basa en traer la data
     como parametro. Primero se parsea el stock y precio a int y decimal,
     luego se valida una condicional, si se recibe un parametro id, quiere decir, si 
@@ -41,12 +41,12 @@ function ProductoForm(/* { product } */) {
         try {
             data.stock = parseInt(data.stock, 10); // Convertir a entero
             data.precio = parseFloat(data.precio, 10.2); // Convertir a flotante
-                
-            if(params.id){
-                await updateProduct(params.id,data)
+
+            if (params.id) {
+                await updateProduct(params.id, data)
                 setSnackbarMessage('Actualizado con éxito');
                 setSnackbarSeverity('success');
-            }else{
+            } else {
                 await createProduct(data);
                 setSnackbarMessage('Creado con éxito');
                 setSnackbarSeverity('success');
@@ -55,38 +55,44 @@ function ProductoForm(/* { product } */) {
                 reset();
             }
             setSnackbarOpen(true);
-            navigate('/producto')
+            /*Agregar setTimeout para poder agregarle un tiempo de 1.5segundos de demora antes que se cambie de ruta */
+            setTimeout(() => {
+                navigate('/producto');
+            }, 1500); // 1.5 segundos, puedes ajustar este tiempo según lo necesites
         } catch (error) {
             console.log(error)
+            setSnackbarMessage(`No se puede crear el producto, ingrese bien los datos.`);
+            setSnackbarSeverity('error');
+            setSnackbarOpen(true);
         }
     }
 
     /*Función para poder guardar el estado de la Categoria*/
     const handleCategoryChange = (event) => {
         setCategories(event.target.value);
-        setValue('idCategoria',event.target.value)
+        setValue('idCategoria', event.target.value)
     }
 
     /* Usar useEffect con una función de cargar el producto seleccionado,
     esto va relacionado con el botón de editar de la tabla de productos,
     al editar un producto, se carga sus datos con esta función.
     */
-    useEffect(()=>{
-        async function cargarProducto(){
-            if(params.id){
+    useEffect(() => {
+        async function cargarProducto() {
+            if (params.id) {
                 const producto = await getProductoById(params.id)
-                console.log(producto)
+                /* console.log(producto) */
                 //ver los valores obtenidos
-                setValue('idCategoria',producto.IdCategoria)
-                setValue('nombre',producto.Nombre)
-                setValue('descripcion',producto.Descripcion)
-                setValue('stock',producto.Stock)
-                setValue('precio',producto.Precio)
+                setValue('idCategoria', producto.IdCategoria)
+                setValue('nombre', producto.Nombre)
+                setValue('descripcion', producto.Descripcion)
+                setValue('stock', producto.Stock)
+                setValue('precio', producto.Precio)
                 setCategories(producto.IdCategoria)
             }
         }
         cargarProducto()
-    },[])
+    }, [])
 
 
     useEffect(() => {
@@ -94,7 +100,7 @@ function ProductoForm(/* { product } */) {
     }, [])
 
 
-   
+
     return (
         <Grid
             component={"form"}
@@ -118,10 +124,10 @@ function ProductoForm(/* { product } */) {
                 textAlign: 'initial',
             }}>Productos</Typography>
             <FormControl fullWidth variant="outlined" margin="normal">
-                <InputLabel 
-                id="categoria-label">Categoría</InputLabel>
+                <InputLabel
+                    id="categoria-label">Categoría</InputLabel>
                 <Select
-                 {...register('idCategoria', { required: true })}
+                    {...register('idCategoria', { required: true })}
                     labelId="categoria-label"
                     id="idCategoria"
                     value={categories}
@@ -149,7 +155,7 @@ function ProductoForm(/* { product } */) {
                 error={false}
                 sx={{ mb: 2 }}
             />
-            
+
             <TextField
                 {...register('descripcion', { required: true })}
                 id='descripcion'
@@ -202,7 +208,7 @@ function ProductoForm(/* { product } */) {
                     Registrar
                 </Button>
             </Box>
-                <Snackbar
+            <Snackbar
                 open={snackbarOpen}
                 autoHideDuration={6000}
                 onClose={() => setSnackbarOpen(false)}
