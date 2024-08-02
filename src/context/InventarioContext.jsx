@@ -42,6 +42,7 @@ export function InventarioProvider({ children }){
           const res = await createInventarioRequest(inventario)
           setInventario((prevInventario)=>[...prevInventario, res.data]);
           /* console.log(res.data) */
+          return res
         } catch (error) {
           console.log(error)
         }
@@ -50,7 +51,8 @@ export function InventarioProvider({ children }){
       const updateInventario = async (id,inventario) => {
         try {
           const res = await updateInventarioRequest(id,inventario)
-          console.log(res.data)
+          /* console.log(res.data) */
+          return res
         } catch (error) {
           console.log(error)
         }
@@ -62,6 +64,7 @@ export function InventarioProvider({ children }){
           if (res.status==204) {
             setInventario(inventario.filter(inv => inv.IdInventario != id))
           }
+          return res
         } catch (error) {
           console.log(error)
         }
