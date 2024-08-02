@@ -51,11 +51,17 @@ function Inventario() {
 
   const handleDelete = async(id) => {
     try {
-      await deleteInventario(id);
-      setSnackbarMessage('Eliminado con éxito');
-      setSnackbarSeverity('success');
-      await getInventario();
+      const response = await deleteInventario(id);
+      if (response) {
+        setSnackbarMessage('Eliminado con éxito');
+        setSnackbarSeverity('success');
+        await getInventario();
+      } else {
+        setSnackbarMessage(`Error al eliminar el producto con ID ${id} del inventario'`);
+        setSnackbarSeverity('error');
+      }
     } catch (error) {
+      console.log(error)
       setSnackbarMessage(`No se puede eliminar el producto con ID ${id}, primero elimine las relaciones en la otra tabla.`);
       setSnackbarSeverity('error');
     }finally{
