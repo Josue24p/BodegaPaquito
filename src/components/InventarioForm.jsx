@@ -95,7 +95,6 @@ function InventarioForm() {
         async function cargarDatos() {
             if (params.id) {
                 const inventario = await getInventarioById(params.id)
-                console.log(inventario)
                 setValue('IdProducto', inventario.IdProducto)
                 setValue('IdCategoria', inventario.IdCategoria)
                 setValue('IdProveedor', inventario.IdProveedor)
