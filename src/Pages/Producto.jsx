@@ -57,24 +57,26 @@ function Producto() {
 
   const [snackbarSeverity, setSnackbarSeverity] = useState('success');
 
-  const handleDelete = async(id) => {
+  const handleDelete = async (id) => {
     try {
-      const eliminar = await deleteProducto(id);
-      if (eliminar == 200){
+      const response = await deleteProducto(id);
+      /* console.log(response) */
+      if (response) {
         setSnackbarMessage('Eliminado con éxito');
         setSnackbarSeverity('success');
         await getProduct();
-      }else{
-        setSnackbarMessage(`No se puede eliminar el producto con ID ${id}, primero elimine las relaciones en la otra tabla.`);
+      } else {
+        setSnackbarMessage(`Error al eliminar el producto con ID ${id}:  'Ocurrió un error inesperado'`);
         setSnackbarSeverity('error');
       }
     } catch (error) {
-      console.log(error)
-    }finally{
+      console.log(error);
+      setSnackbarMessage('Ocurrió un error al intentar eliminar el producto');
+      setSnackbarSeverity('error');
+    } finally {
       setSnackbarOpen(true);
     }
-    
-  }
+  };
 
   useEffect(() => {
     getProduct();
