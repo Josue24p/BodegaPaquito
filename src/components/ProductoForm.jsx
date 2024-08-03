@@ -1,10 +1,11 @@
-import { Alert, Box, Button, FormControl, Grid, InputLabel, Select, Snackbar, TextField, Typography } from '@mui/material'
+import { Box, Button, FormControl, Grid, InputLabel, Select, TextField, Typography } from '@mui/material'
 import MenuItem from '@mui/material/MenuItem';
 import { useForm } from 'react-hook-form';
 import { useProduct } from '../context/ProductContext';
 import { useCategoria } from '../context/CategoriaContext';
 import { useEffect, useState } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
+import { useSnackbar } from '../context/SnackbarContext';
 
 
 function ProductoForm(/* { product } */) {
@@ -15,16 +16,8 @@ function ProductoForm(/* { product } */) {
     const params = useParams()
     const navigate = useNavigate()
 
-    /*Agregar mensaje de confirmación que se creo el registro*/
-    /*snackbarOpen será para poder mostrar el mensaje, setSnackbarOpen maneja el estado
-    del mensaje, si es true se muestra, si es false se quita*/
-    const [snackbarOpen, setSnackbarOpen] = useState(false);
-
-    /*Estado para poder almacenar el mensaje a mostrar*/
-    const [snackbarMessage, setSnackbarMessage] = useState('');
-
-    /*Estado para guardar el tipo de mensaje si es success o error, entre otros.*/
-    const [snackbarSeverity, setSnackbarSeverity] = useState('success');
+    //Usar la función showSnackbar para mostrar mensaje de actualizar, crear o eliminar.
+    const { showSnackbar } = useSnackbar();
 
     /*Función de confirmar el registro, la funcionalidad se basa en traer la data
     como parametro. Primero se parsea el stock y precio a int y decimal,
@@ -44,26 +37,19 @@ function ProductoForm(/* { product } */) {
 
             if (params.id) {
                 await updateProduct(params.id, data)
-                setSnackbarMessage('Actualizado con éxito');
-                setSnackbarSeverity('success');
+                showSnackbar('Actualizado con éxito', 'success');
             } else {
                 await createProduct(data);
-                setSnackbarMessage('Creado con éxito');
-                setSnackbarSeverity('success');
+                showSnackbar('Creado con éxito', 'success');
                 setCategories('')
                 await getProduct()
                 reset();
             }
-            setSnackbarOpen(true);
-            /*Agregar setTimeout para poder agregarle un tiempo de 1.5segundos de demora antes que se cambie de ruta */
-            setTimeout(() => {
-                navigate('/producto');
-            }, 1500); // 1.5 segundos, puedes ajustar este tiempo según lo necesites
+            navigate('/producto');
+
         } catch (error) {
             console.log(error)
-            setSnackbarMessage(`No se puede crear el producto, ingrese bien los datos.`);
-            setSnackbarSeverity('error');
-            setSnackbarOpen(true);
+            showSnackbar('No se puede crear el producto, ingrese bien los datos.', 'error');
         }
     }
 
@@ -208,20 +194,6 @@ function ProductoForm(/* { product } */) {
                     Registrar
                 </Button>
             </Box>
-            <Snackbar
-                open={snackbarOpen}
-                autoHideDuration={6000}
-                onClose={() => setSnackbarOpen(false)}
-                anchorOrigin={{ vertical: 'top', horizontal: 'center' }}
-            >
-                <Alert
-                    onClose={() => setSnackbarOpen(false)}
-                    severity={snackbarSeverity}
-                    sx={{ width: '100%' }}
-                >
-                    {snackbarMessage}
-                </Alert>
-            </Snackbar>
         </Grid>
     )
 }

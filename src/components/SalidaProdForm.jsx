@@ -6,6 +6,7 @@ import { useEffect, useState } from 'react';
 import { useCategoria } from '../context/CategoriaContext';
 import { useNavigate, useParams } from 'react-router-dom';
 import { useCliente } from '../context/ClienteContext';
+import { useSnackbar } from '../context/SnackbarContext';
 
 
 function SalidaProdForm() {
@@ -55,13 +56,18 @@ function SalidaProdForm() {
     /* Se hace uso de navigate para poder redirigir a otro vista*/
     const navigate = useNavigate()
 
+    //Usar la función showSnackbar para mostrar mensaje de actualizar, crear o eliminar.
+    const { showSnackbar } = useSnackbar();
+
     const submit = async (data) => {
         try {
             //validar los datos
             if (params.id) {
                 await updateSalidaP(params.id, data)
+                showSnackbar('Actualizado con éxito', 'success');
             } else {
                 await createSalidaP(data);
+                showSnackbar('Creado con éxito', 'success');
                 setClientes('');
                 setProductos('');
                 setCategories('');
@@ -71,6 +77,7 @@ function SalidaProdForm() {
             navigate('/salidaProducto')
         } catch (error) {
             console.log(error)
+            showSnackbar('No se puede crear el producto, ingrese bien los datos.', 'error');
         }
     }
 
@@ -105,7 +112,6 @@ function SalidaProdForm() {
         async function cargarDatos() {
             if (params.id) {
                 const salida = await getSalidaId(params.id);
-                console.log(salida)
                 setValue('IdCliente', salida.IdCliente);
                 setValue('IdProducto', salida.IdProducto);
                 setValue('IdCategoria', salida.IdCategoria);
@@ -157,7 +163,7 @@ function SalidaProdForm() {
             <TextField
                 {...register('IdCliente', { required: true })}
                 id='IdCliente'
-                label='IdCliente'
+                label='Cliente'
                 type='text'
                 variant='outlined'
                 value={clientes}
@@ -179,7 +185,7 @@ function SalidaProdForm() {
             <TextField
                 {...register('IdProducto', { required: true })}
                 id='IdProducto'
-                label='IdProducto'
+                label='Producto'
                 type='text'
                 variant='outlined'
                 value={productos}
@@ -202,7 +208,7 @@ function SalidaProdForm() {
             <TextField
                 {...register('IdCategoria', { required: true })}
                 id='IdCategoria'
-                label='IdCategoria'
+                label='Categoria'
                 type='text'
                 variant='outlined'
                 value={categories}
@@ -237,7 +243,7 @@ function SalidaProdForm() {
                 type='date'
                 variant='outlined'
                 fullWidth
-                helperText='Ingrese un Fecha válida'
+                helperText='Ingrese una Fecha válida'
                 error={false}
             />
             <Box sx={{ display: 'flex', justifyContent: 'center', mt: 0 }}>

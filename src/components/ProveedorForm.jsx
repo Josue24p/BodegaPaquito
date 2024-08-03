@@ -4,6 +4,7 @@ import { useProveedor } from '../context/ProveedorContext';
 import { useForm } from 'react-hook-form';
 import { useNavigate, useParams } from 'react-router-dom';
 import { useEffect } from 'react';
+import { useSnackbar } from '../context/SnackbarContext';
 
 function ProveedorForm() {
 
@@ -11,6 +12,9 @@ function ProveedorForm() {
   const {createProveedor, getProveedor,getProveedorById, updateProveedor}= useProveedor();
   const params = useParams()
   const navigate = useNavigate()
+
+  //Usar la función showSnackbar para mostrar mensaje de actualizar, crear o eliminar.
+  const { showSnackbar } = useSnackbar();
 
   /*Función de confirmar el registro, la funcionalidad se basa en traer la data
     como parametro. Se valida una condicional, si se recibe un parametro id, quiere decir, si 
@@ -25,14 +29,17 @@ function ProveedorForm() {
     try {
       if(params.id){
         await updateProveedor(params.id, data)
+        showSnackbar('Actualizado con éxito', 'success');
       }else{
         await createProveedor(data);
+        showSnackbar('Creado con éxito', 'success');
         await getProveedor()
         reset()
       }
       navigate('/proveedor')
     } catch (error) {
       console.error(error);
+      showSnackbar('No se puede crear el producto, ingrese bien los datos.', 'error');
     }
   };
 
@@ -45,7 +52,6 @@ function ProveedorForm() {
     async function cargarProveedor(){
         if(params.id){
             const proveedor = await getProveedorById(params.id)
-            console.log(proveedor)
             //ver los valores obtenidos
             setValue('nombre', proveedor.Nombre)
             setValue('ruc', proveedor.RUC)

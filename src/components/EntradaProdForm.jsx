@@ -6,6 +6,7 @@ import { useProduct } from '../context/ProductContext';
 import { useCategoria } from '../context/CategoriaContext';
 import { useEffect, useState } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
+import { useSnackbar } from '../context/SnackbarContext';
 
 
 function EntradaProdForm(/* {entrada} */) {
@@ -25,6 +26,9 @@ function EntradaProdForm(/* {entrada} */) {
     const params = useParams()
     const navigate = useNavigate()
 
+    //Usar la función showSnackbar para mostrar mensaje de actualizar, crear o eliminar.
+    const { showSnackbar } = useSnackbar();
+
     /*Función de confirmar el registro, la funcionalidad se basa en traer la data
         como parametro. Primero se parsea la cantidad a int, luego se valida una 
         condicional, si se recibe un parametro id, quiere decir, si 
@@ -41,8 +45,10 @@ function EntradaProdForm(/* {entrada} */) {
             data.cantidad = parseInt(data.cantidad, 10);//convertir a entero
             if (params.id) {
                 await updateEntradaP(params.id, data);
+                showSnackbar('Actualizado con éxito', 'success');
             } else {
                 await createEntradaP(data);
+                showSnackbar('Creado con éxito', 'success');
                 setCategories('');
                 setProveedores('');
                 setProductos('');
@@ -52,6 +58,7 @@ function EntradaProdForm(/* {entrada} */) {
             navigate('/entradaProducto')
         } catch (error) {
             console.log(error)
+            showSnackbar('No se puede crear el producto, ingrese bien los datos.', 'error');
         }
     }
 
@@ -86,7 +93,6 @@ function EntradaProdForm(/* {entrada} */) {
         async function cargarDatos() {
             if (params.id) {
                 const entrada = await getEntradaById(params.id)
-                console.log(entrada)
                 //ver los valores obtenidos
                 setValue('IdProveedor', entrada.IdProveedor)
                 setValue('IdProducto', entrada.IdProducto)
@@ -182,7 +188,7 @@ function EntradaProdForm(/* {entrada} */) {
                     id="IdCategoria"
                     value={categories}
                     onChange={handleCategoryChange}
-                    label="categoria"
+                    label="Categoria"
                     required
                     sx={{ mb: 2 }}
                 >
