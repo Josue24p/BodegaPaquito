@@ -1,4 +1,4 @@
-import { Alert, Box, Button, FormControl, Grid, InputLabel, MenuItem, Select, Snackbar, TextField, Typography } from '@mui/material'
+import { Box, Button, FormControl, Grid, InputLabel, MenuItem, Select, TextField, Typography } from '@mui/material'
 import { useForm } from 'react-hook-form';
 import { useProduct } from '../context/ProductContext';
 import { useEffect, useState } from 'react';
@@ -6,6 +6,7 @@ import { useCategoria } from '../context/CategoriaContext';
 import { useProveedor } from '../context/ProveedorContext';
 import { useNavigate, useParams } from 'react-router-dom';
 import { useInventario } from '../context/InventarioContext';
+import { useSnackbar } from '../context/SnackbarContext';
 
 
 function InventarioForm() {
@@ -22,47 +23,31 @@ function InventarioForm() {
     const { proveedor, getProveedor } = useProveedor();
     const [proveedores, setProveedores] = useState('');
 
-    const params = useParams();
+    const {id: paramId } = useParams();
+
     const navigate = useNavigate();
-
-    /*Agregar mensaje de confirmación que se creo el registro*/
-    /*snackbarOpen será para poder mostrar el mensaje, setSnackbarOpen maneja el estado
-    del mensaje, si es true se muestra, si es false se quita*/
-    const [snackbarOpen, setSnackbarOpen] = useState(false);
-
-    /*Estado para poder almacenar el mensaje a mostrar*/
-    const [snackbarMessage, setSnackbarMessage] = useState('');
-
-    /*Estado para guardar el tipo de mensaje si es success o error, entre otros.*/
-    const [snackbarSeverity, setSnackbarSeverity] = useState('success');
+    //Usar la función showSnackbar para mostrar mensaje de actualizar, crear o eliminar.
+    const { showSnackbar } = useSnackbar();
     
     const submit = async (data) => {
         try {
-            //validar los datos
-            const param = params.id
-            if (param) {
-                await updateInventario(param, data)
-                setSnackbarMessage('Actualizado con éxito');
-                setSnackbarSeverity('success');
+            //validar los datos.
+            if (paramId) {
+                await updateInventario(paramId, data)
+                showSnackbar('Actualizado con éxito','success');
             } else {
                 await createInventario(data)
-                setSnackbarMessage('Creado con éxito');
-                setSnackbarSeverity('success');
+                showSnackbar('Creado con éxito','success');
                 setProductos('');
                 setCategories('');
                 setProveedores('');
                 await getInventario();
                 reset();
             }
-            setSnackbarOpen(true);
-            /*Agregar setTimeout para poder agregarle un tiempo de 1.5segundos de demora antes que se cambie de ruta */
-            setTimeout(() => {
-                navigate('/inventario');
-              }, 1500); // 1.5 segundos, puedes ajustar este tiempo según lo necesites
+            navigate('/inventario')
+            
         } catch (error) {
-            setSnackbarMessage(`No se puede crear el producto, ingrese bien los datos.`);
-            setSnackbarSeverity('error');
-            setSnackbarOpen(true);
+            showSnackbar('No se puede crear el producto, ingrese bien los datos.', 'error');
         }
     }
 
@@ -93,8 +78,8 @@ function InventarioForm() {
     /*Función para cargar los datos del Inventario al editar*/
     useEffect(() => {
         async function cargarDatos() {
-            if (params.id) {
-                const inventario = await getInventarioById(params.id)
+            if (paramId) {
+                const inventario = await getInventarioById(paramId)
                 setValue('IdProducto', inventario.IdProducto)
                 setValue('IdCategoria', inventario.IdCategoria)
                 setValue('IdProveedor', inventario.IdProveedor)
@@ -232,20 +217,6 @@ function InventarioForm() {
                     Registrar
                 </Button>
             </Box>
-            <Snackbar
-                open={snackbarOpen}
-                autoHideDuration={6000}
-                onClose={() => setSnackbarOpen(false)}
-                anchorOrigin={{ vertical: 'top', horizontal: 'center' }}
-            >
-                <Alert
-                    onClose={() => setSnackbarOpen(false)}
-                    severity={snackbarSeverity}
-                    sx={{ width: '100%' }}
-                >
-                    {snackbarMessage}
-                </Alert>
-            </Snackbar>
         </Grid>
     )
 }
