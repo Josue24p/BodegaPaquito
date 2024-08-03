@@ -26,9 +26,10 @@ import PeopleAltIcon from '@mui/icons-material/PeopleAlt';
 import FastfoodIcon from '@mui/icons-material/Fastfood';
 import DeliveryDiningIcon from '@mui/icons-material/DeliveryDining';
 import AddShoppingCartIcon from '@mui/icons-material/AddShoppingCart';
-import {useNavigate} from 'react-router-dom'
+import { useNavigate } from 'react-router-dom'
 import { Button } from '@mui/material';
 import { BiCategory } from "react-icons/bi";
+import { BsPersonVcardFill } from "react-icons/bs";
 const drawerWidth = 240;
 
 const openedMixin = (theme) => ({
@@ -117,7 +118,7 @@ export default function Sidebar() {
   return (
     <Box sx={{ display: 'flex' }}>
       <CssBaseline />
-      <AppBar sx={{backgroundColor: 'black'}} position="fixed" open={open}>
+      <AppBar sx={{ backgroundColor: 'black' }} position="fixed" open={open}>
         <Toolbar>
           <IconButton
             color="inherit"
@@ -131,19 +132,24 @@ export default function Sidebar() {
           >
             <MenuIcon />
           </IconButton>
-          <Typography variant="h6" noWrap component="div">
-            Bienvenido a Bodega Paquito
+          <Typography
+            variant="h6"
+            noWrap
+            component="div"
+            sx={{ textAlign: 'center', width: '100%' }}
+          >
+            Bienvenido a la Bodega Paquito
           </Typography>
         </Toolbar>
       </AppBar>
       <Drawer variant="permanent" open={open}>
         <DrawerHeader>
-        <Button
-          sx={{width: {xs:'100%', md:'30px'}}}>
+          <Button
+            sx={{ width: { xs: '100%', md: '30px' } }}>
             <img src="https://avatars.akamai.steamstatic.com/c3c0f2a2dbd57045c34ec5eb9245e54e75e0ec2a_full.jpg"
-            style={{width: '50px', borderRadius: 10, marginLeft:20}}/>
-            </Button>
-        <ListItemText primary="Dashboard" sx={{textAlign: 'center'}}/>
+              style={{ width: '50px', borderRadius: 10, marginLeft: 1 }} />
+          </Button>
+          <ListItemText primary="Dashboard" sx={{ textAlign: 'center' }} />
 
           <IconButton onClick={handleDrawerClose}>
             {theme.direction === 'rtl' ? <ChevronRightIcon /> : <ChevronLeftIcon />}
@@ -152,131 +158,141 @@ export default function Sidebar() {
         </DrawerHeader>
         <Divider />
         <List>
-          
-            <ListItem disablePadding sx={{ display: 'block' }} onClick={()=>(navigate('/'))}>
-              <ListItemButton
-                sx={{
-                  minHeight: 48,
-                  justifyContent: open ? 'initial' : 'center',
-                  px: 2.5,
-                }}
-              >
-                <ListItemIcon
-                  sx={{
-                    minWidth: 0,
-                    mr: open ? 3 : 'auto',
-                    justifyContent: 'center',
-                  }}
-                >
-                   <DashboardIcon /> 
-                </ListItemIcon>
-                <ListItemText primary="Home" sx={{ opacity: open ? 1 : 0 }} />
-              </ListItemButton>
-            </ListItem>
 
-            <ListItem disablePadding sx={{ display: 'block' }} >
-              <ListItemButton
+          <ListItem disablePadding sx={{ display: 'block' }} onClick={() => (navigate('/'))}>
+            <ListItemButton
+              sx={{
+                minHeight: 48,
+                justifyContent: open ? 'initial' : 'center',
+                px: 2.5,
+              }}
+            >
+              <ListItemIcon
                 sx={{
-                  minHeight: 48,
-                  justifyContent: open ? 'initial' : 'center',
-                  px: 2.5,
+                  minWidth: 0,
+                  mr: open ? 3 : 'auto',
+                  justifyContent: 'center',
                 }}
-                onClick={handleSubMenuClick}
               >
-                <ListItemIcon
-                  sx={{
-                    minWidth: 0,
-                    mr: open ? 3 : 'auto',
-                    justifyContent: 'center',
-                  }}
-                >
-                   <InventoryIcon /> 
-                </ListItemIcon>
-                <ListItemText primary="Menú" sx={{ opacity: open ? 1 : 0 }} />
-                {open ? <ExpandLess/> : <ExpandMore/>}
-              </ListItemButton>
-                <Collapse in={openSubMenu} timeout={"auto"} unmountOnExit onClick={()=>(navigate('/proveedor'))}>
-                <List component={"div"} disablePadding>
-                    <ListItemButton sx={{pl: 4}}>
-                        <ListItemIcon>
-                            <PeopleAltIcon/>
-                        </ListItemIcon>
-                        <ListItemText primary="Proveedores"/>
-                    </ListItemButton>
-                </List>
-                </Collapse>
-                <Collapse in={openSubMenu} timeout={"auto"} unmountOnExit onClick={()=>(navigate('/producto'))}>
-                <List component={"div"} disablePadding>
-                    <ListItemButton sx={{pl: 4}}>
-                        <ListItemIcon>
-                            <AddShoppingCartIcon/>
-                        </ListItemIcon>
-                        <ListItemText primary="Producto"/>
-                    </ListItemButton>
-                </List>
-                </Collapse>
-                <Collapse in={openSubMenu} timeout={"auto"} unmountOnExit onClick={()=>(navigate('/entradaProducto'))}>
-                <List component={"div"} disablePadding>
-                    <ListItemButton sx={{pl: 4}}>
-                        <ListItemIcon>
-                            <FastfoodIcon/>
-                        </ListItemIcon>
-                        <ListItemText primary="Entrada Producto"/>
-                    </ListItemButton>
-                </List>
-                </Collapse>
-                <Collapse in={openSubMenu} timeout={"auto"} unmountOnExit onClick={()=>(navigate('/salidaProducto'))}>
-                <List component={"div"} disablePadding>
-                    <ListItemButton sx={{pl: 4}}>
-                        <ListItemIcon>
-                            <DeliveryDiningIcon/>
-                        </ListItemIcon>
-                        <ListItemText primary="Salida Producto"/>
-                    </ListItemButton>
-                </List>
-                </Collapse>
-            </ListItem>
+                <DashboardIcon />
+              </ListItemIcon>
+              <ListItemText primary="Home" sx={{ opacity: open ? 1 : 0 }} />
+            </ListItemButton>
+          </ListItem>
 
-            <ListItem disablePadding sx={{ display: 'block' }} onClick={()=>(navigate('/inventario'))}>
-              <ListItemButton
+          <ListItem disablePadding sx={{ display: 'block' }} >
+            <ListItemButton
+              sx={{
+                minHeight: 48,
+                justifyContent: open ? 'initial' : 'center',
+                px: 2.5,
+              }}
+              onClick={handleSubMenuClick}
+            >
+              <ListItemIcon
                 sx={{
-                  minHeight: 48,
-                  justifyContent: open ? 'initial' : 'center',
-                  px: 2.5,
+                  minWidth: 0,
+                  mr: open ? 3 : 'auto',
+                  justifyContent: 'center',
                 }}
               >
-                <ListItemIcon
-                  sx={{
-                    minWidth: 0,
-                    mr: open ? 3 : 'auto',
-                    justifyContent: 'center',
-                  }}
-                >
-                   <InventoryTwoToneIcon /> 
-                </ListItemIcon>
-                <ListItemText primary="Inventario" sx={{ opacity: open ? 1 : 0 }} />
-              </ListItemButton>
-            </ListItem>
-            <ListItem disablePadding sx={{ display: 'block' }} onClick={()=>(navigate('/categoria'))}>
-              <ListItemButton
+                <InventoryIcon />
+              </ListItemIcon>
+              <ListItemText primary="Menú" sx={{ opacity: open ? 1 : 0 }} />
+              {open ? <ExpandLess /> : <ExpandMore />}
+            </ListItemButton>
+            <Collapse in={openSubMenu} timeout={"auto"} unmountOnExit onClick={() => (navigate('/proveedor'))}>
+              <List component={"div"} disablePadding>
+                <ListItemButton sx={{ pl: 4 }}>
+                  <ListItemIcon>
+                    <PeopleAltIcon />
+                  </ListItemIcon>
+                  <ListItemText primary="Proveedores" />
+                </ListItemButton>
+              </List>
+            </Collapse>
+            <Collapse in={openSubMenu} timeout={"auto"} unmountOnExit onClick={() => (navigate('/cliente'))}>
+              <List component={"div"} disablePadding>
+                <ListItemButton sx={{ pl: 4 }}>
+                  <ListItemIcon>
+                    <BsPersonVcardFill style={{ fontSize: '23px' }}/>
+                  </ListItemIcon>
+                  <ListItemText primary="Cliente" />
+                </ListItemButton>
+              </List>
+            </Collapse>
+            <Collapse in={openSubMenu} timeout={"auto"} unmountOnExit onClick={() => (navigate('/producto'))}>
+              <List component={"div"} disablePadding>
+                <ListItemButton sx={{ pl: 4 }}>
+                  <ListItemIcon>
+                    <AddShoppingCartIcon />
+                  </ListItemIcon>
+                  <ListItemText primary="Producto" />
+                </ListItemButton>
+              </List>
+            </Collapse>
+            <Collapse in={openSubMenu} timeout={"auto"} unmountOnExit onClick={() => (navigate('/entradaProducto'))}>
+              <List component={"div"} disablePadding>
+                <ListItemButton sx={{ pl: 4 }}>
+                  <ListItemIcon>
+                    <FastfoodIcon />
+                  </ListItemIcon>
+                  <ListItemText primary="Entrada Producto" />
+                </ListItemButton>
+              </List>
+            </Collapse>
+            <Collapse in={openSubMenu} timeout={"auto"} unmountOnExit onClick={() => (navigate('/salidaProducto'))}>
+              <List component={"div"} disablePadding>
+                <ListItemButton sx={{ pl: 4 }}>
+                  <ListItemIcon>
+                    <DeliveryDiningIcon />
+                  </ListItemIcon>
+                  <ListItemText primary="Salida Producto" />
+                </ListItemButton>
+              </List>
+            </Collapse>
+          </ListItem>
+
+          <ListItem disablePadding sx={{ display: 'block' }} onClick={() => (navigate('/inventario'))}>
+            <ListItemButton
+              sx={{
+                minHeight: 48,
+                justifyContent: open ? 'initial' : 'center',
+                px: 2.5,
+              }}
+            >
+              <ListItemIcon
                 sx={{
-                  minHeight: 48,
-                  justifyContent: open ? 'initial' : 'center',
-                  px: 2.5,
+                  minWidth: 0,
+                  mr: open ? 3 : 'auto',
+                  justifyContent: 'center',
                 }}
               >
-                <ListItemIcon
-                  sx={{
-                    minWidth: 0,
-                    mr: open ? 3 : 'auto',
-                    justifyContent: 'center',
-                  }}
-                >
-                   <BiCategory /> 
-                </ListItemIcon>
-                <ListItemText primary="Inventario" sx={{ opacity: open ? 1 : 0 }} />
-              </ListItemButton>
-            </ListItem>
+                <InventoryTwoToneIcon />
+              </ListItemIcon>
+              <ListItemText primary="Inventario" sx={{ opacity: open ? 1 : 0 }} />
+            </ListItemButton>
+          </ListItem>
+          <ListItem disablePadding sx={{ display: 'block' }} onClick={() => (navigate('/categoria'))}>
+            <ListItemButton
+              sx={{
+                minHeight: 48,
+                justifyContent: open ? 'initial' : 'center',
+                px: 2.5,
+              }}
+            >
+              <ListItemIcon
+                sx={{
+                  minWidth: 0,
+                  mr: open ? 3 : 'auto',
+                  justifyContent: 'center',
+                }}
+              >
+                <BiCategory style={{ fontSize: '23px' }}/>
+              </ListItemIcon>
+              <ListItemText primary="Inventario" sx={{ opacity: open ? 1 : 0 }} />
+            </ListItemButton>
+          </ListItem>
         </List>
 
       </Drawer>
