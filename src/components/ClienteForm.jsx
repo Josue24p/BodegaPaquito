@@ -1,4 +1,4 @@
-import { Button, Grid, TextField, Typography } from '@mui/material'
+import { Box, Button, Grid, TextField, Typography } from '@mui/material'
 import { useCliente } from '../context/ClienteContext';
 
 import { useForm } from 'react-hook-form';
@@ -36,7 +36,7 @@ function ClienteForm() {
         await getCliente()
         reset()
       }
-      navigate('/Cliente')
+      navigate('/cliente')
     } catch (error) {
       console.error(error);
       showSnackbar('No se puede crear el producto, ingrese bien los datos.', 'error');
@@ -51,14 +51,14 @@ function ClienteForm() {
   useEffect(()=>{
     async function cargarCliente(){
         if(params.id){
-            const Cliente = await getClienteById(params.id)
+            const cliente = await getClienteById(params.id)
             //ver los valores obtenidos
-            setValue('nombre', Cliente.Nombres)
-            setValue('apellido', Cliente.Apellidos)
-            setValue('dni', Cliente.DNI)
-            setValue('direccion', Cliente.Direccion)
-            setValue('telefono', Cliente.Telefono)
-            setValue('correo', Cliente.Correo)
+            setValue('nombre', cliente.Nombres)
+            setValue('apellido', cliente.Apellidos)
+            setValue('dni', cliente.DNI)
+            setValue('direccion', cliente.Direccion)
+            setValue('telefono', cliente.Telefono)
+            setValue('correo', cliente.Correo)
         }
     }
     cargarCliente()
@@ -75,12 +75,11 @@ function ClienteForm() {
         borderRadius: '10px',
         boxShadow: '0 0 10px rgba(0, 0, 0, 0.1)',
         margin: 0,
-        ml: 2,
-        mt: 4,
-        mr: 1,
-        padding: 4,
+        ml: 0,
+        mt: 2,
+        padding: 2,
         width: { xs: '100%', md: '500px' },
-        height: { xs: '100%', md: '550px' }
+        height: { xs: '100%', md: '100%' }
       }}
     >
       <Typography sx={{
@@ -98,6 +97,7 @@ function ClienteForm() {
         fullWidth
         helperText='Ingrese un nombre válido'
         error={false}
+        sx={{ mb: 2 }}
       />
       <TextField
         {...register('apellido', { required: true })}
@@ -109,6 +109,7 @@ function ClienteForm() {
         fullWidth
         helperText='Ingrese un nombre válido'
         error={false}
+        sx={{ mb: 2 }}
       />
       <TextField
         {...register('dni', { required: true })}
@@ -119,6 +120,7 @@ function ClienteForm() {
         fullWidth
         helperText='Ingrese un ruc válido'
         error={false}
+        sx={{ mb: 2 }}
       />
       <TextField
         {...register('direccion', { required: true })}
@@ -129,6 +131,7 @@ function ClienteForm() {
         fullWidth
         helperText='Ingrese una dirección válida'
         error={false}
+        sx={{ mb: 2 }}
       />
       <TextField
         {...register('telefono', { 
@@ -141,6 +144,7 @@ function ClienteForm() {
         fullWidth
         helperText='Ingrese un teléfono válido'
         error={false}
+        sx={{ mb: 2 }}
       />
       <TextField
         {...register('correo', { required: true })}
@@ -152,11 +156,12 @@ function ClienteForm() {
         helperText='Ingrese un email válido'
         error={false}
       />
+      <Box sx={{ display: 'flex', justifyContent: 'center', mt: 0 }}>
       <Button
         type='submit'
         variant='outlined'
         sx={{
-          mt: 2,
+          mt: 1,
           color: 'white',
           backgroundColor: 'cornflowerblue',
           '&:hover': {
@@ -164,6 +169,7 @@ function ClienteForm() {
           },
           borderRadius: '10px',
         }}>Registrar</Button>
+        </Box>
     </Grid>
   )
 }

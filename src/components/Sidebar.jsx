@@ -30,7 +30,7 @@ import { useNavigate } from 'react-router-dom'
 import { Button } from '@mui/material';
 import { BiCategory } from "react-icons/bi";
 import { BsPersonVcardFill } from "react-icons/bs";
-const drawerWidth = 240;
+const drawerWidth = 250;
 
 const openedMixin = (theme) => ({
   width: drawerWidth,
@@ -101,7 +101,7 @@ const Drawer = styled(MuiDrawer, { shouldForwardProp: (prop) => prop !== 'open' 
 export default function Sidebar() {
   const theme = useTheme();
   const [open, setOpen] = React.useState(false);
-  const [openSubMenu, setOpenSubMenu] = React.useState(false);
+  const [openSubMenu, setOpenSubMenu] = React.useState(true);
   const navigate = useNavigate();
   const handleDrawerOpen = () => {
     setOpen(true);
@@ -217,7 +217,7 @@ export default function Sidebar() {
                   <ListItemIcon>
                     <BsPersonVcardFill style={{ fontSize: '23px' }}/>
                   </ListItemIcon>
-                  <ListItemText primary="Cliente" />
+                  <ListItemText primary="Clientes" />
                 </ListItemButton>
               </List>
             </Collapse>
@@ -227,7 +227,7 @@ export default function Sidebar() {
                   <ListItemIcon>
                     <AddShoppingCartIcon />
                   </ListItemIcon>
-                  <ListItemText primary="Producto" />
+                  <ListItemText primary="Productos" />
                 </ListItemButton>
               </List>
             </Collapse>
@@ -237,7 +237,7 @@ export default function Sidebar() {
                   <ListItemIcon>
                     <FastfoodIcon />
                   </ListItemIcon>
-                  <ListItemText primary="Entrada Producto" />
+                  <ListItemText primary="Entrada de Productos" />
                 </ListItemButton>
               </List>
             </Collapse>
@@ -247,7 +247,7 @@ export default function Sidebar() {
                   <ListItemIcon>
                     <DeliveryDiningIcon />
                   </ListItemIcon>
-                  <ListItemText primary="Salida Producto" />
+                  <ListItemText primary="Salida de Productos" />
                 </ListItemButton>
               </List>
             </Collapse>
@@ -290,7 +290,7 @@ export default function Sidebar() {
               >
                 <BiCategory style={{ fontSize: '23px' }}/>
               </ListItemIcon>
-              <ListItemText primary="Inventario" sx={{ opacity: open ? 1 : 0 }} />
+              <ListItemText primary="Categorías" sx={{ opacity: open ? 1 : 0 }} />
             </ListItemButton>
           </ListItem>
         </List>

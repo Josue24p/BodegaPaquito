@@ -97,8 +97,8 @@ function ProductoForm(/* { product } */) {
                 borderRadius: '10px',
                 boxShadow: '0 0 10px rgba(0, 0, 0, 0.1)',
                 margin: 0,
-                ml: 2,
-                mr: 1,
+                ml: 0,
+                mt: 2,
                 padding: 2,
                 width: { xs: '100%', md: '500px' },
                 height: { xs: '100%', md: '100%' }
