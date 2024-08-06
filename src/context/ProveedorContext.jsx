@@ -20,6 +20,7 @@ export function ProveedorProvider({ children }) {
     try {
       const res = await getProveedorRequest()
       setProveedor(res.data)
+      return res
     } catch (error) {
       console.log(error)
     }
@@ -28,7 +29,6 @@ export function ProveedorProvider({ children }) {
   const getProveedorById = async (id) => {
     try {
       const res = await getProveedorByIdRequest(id)
-      console.log(res.data)
       return res.data
     } catch (error) {
       console.log(error)
@@ -39,7 +39,7 @@ export function ProveedorProvider({ children }) {
     try {
       const res = await createProveedorRequest(provedors)
       setProveedor((prevProveedores)=>[...prevProveedores, res.data]);
-      console.log(res.data)
+      return res
     } catch (error) {
       console.log(error)
     }
@@ -48,7 +48,7 @@ export function ProveedorProvider({ children }) {
   const updateProveedor = async (id, proveedors) => {
     try {
       const res = await updateProveedorRequest(id, proveedors)
-      console.log(res.data)
+      return res
     } catch (error) {
       console.log(error)
     }
@@ -60,6 +60,7 @@ export function ProveedorProvider({ children }) {
       if (res.status==204) {
         setProveedor(proveedor.filter(proveedor => proveedor.IdProveedor != id))
       }
+      return res
     } catch (error) {
       console.log(error)
     }

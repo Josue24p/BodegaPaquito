@@ -20,6 +20,7 @@ export function ClienteProvider({ children }) {
     try {
       const res = await getClienteRequest()
       setCliente(res.data)
+      return res
     } catch (error) {
       console.log(error)
     }
@@ -28,7 +29,6 @@ export function ClienteProvider({ children }) {
   const getClienteById = async (id) => {
     try {
       const res = await getClienteByIdRequest(id)
-      console.log(res.data)
       return res.data
     } catch (error) {
       console.log(error)
@@ -39,7 +39,7 @@ export function ClienteProvider({ children }) {
     try {
       const res = await createClienteRequest(cliente)
       setCliente((prevClientees)=>[...prevClientees, res.data]);
-      console.log(res.data)
+      return res
     } catch (error) {
       console.log(error)
     }
@@ -48,7 +48,7 @@ export function ClienteProvider({ children }) {
   const updateCliente = async (id, cliente) => {
     try {
       const res = await updateClienteRequest(id, cliente)
-      console.log(res.data)
+      return res
     } catch (error) {
       console.log(error)
     }
@@ -60,6 +60,7 @@ export function ClienteProvider({ children }) {
       if (res.status==204) {
         setCliente(cliente.filter(cliente => cliente.IdCliente != id))
       }
+      return res
     } catch (error) {
       console.log(error)
     }

@@ -30,7 +30,6 @@ export function SalidaProductProvider({ children }){
     const getSalidaId = async (id) => {
       try {
         const res = await getSalidaById(id)
-        console.log(res.data)
         return res.data
       } catch (error) {
         console.log(error)
@@ -41,7 +40,7 @@ export function SalidaProductProvider({ children }){
         try {
           const res = await createSalidaProdRequest(salida)
           setSalida((prevSalida)=>[...prevSalida, res.data]);
-          console.log(res.data)
+          return res
         } catch (error) {
           console.log(error)
         }
@@ -50,7 +49,7 @@ export function SalidaProductProvider({ children }){
     const updateSalidaP = async (id, salida) => {
       try {
         const res = await updateSalidaProdRequest(id, salida)
-        console.log(res.data)
+        return res
       } catch (error) {
         console.log(error)
       }
@@ -62,6 +61,7 @@ export function SalidaProductProvider({ children }){
         if (res.status === 204){
           setSalida(salida.filter(sal => sal.IdSalida !== id))
         }
+        return res
       } catch (error) {
         console.log(error)
       }

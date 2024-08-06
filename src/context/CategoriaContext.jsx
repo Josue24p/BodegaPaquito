@@ -29,7 +29,6 @@ export function CategoriaProvider({children}){
     const getCategoriaById = async (id) => {
         try{
             const res = await getCategoriaByIdRequest(id);
-            console.log(res.data)
             return res.data
         } catch(error){
             console.error('Error getting categoria:', error);
@@ -40,7 +39,7 @@ export function CategoriaProvider({children}){
         try {
             const res = await createCategoriaRequest(categoria)
             setCategoria((prevCategoria)=>[...prevCategoria, res.data])
-            console.log(res.data)
+            return res
         } catch (error) {
             console.log(error)
         }
@@ -49,7 +48,7 @@ export function CategoriaProvider({children}){
     const updateCategoria = async (id, categoria) => {
         try {
             const res = await updateCategoriaRequest(id, categoria)
-            console.log(res.data)
+            return res
         } catch (error) {
            console.log(error) 
         }
@@ -61,6 +60,7 @@ export function CategoriaProvider({children}){
             if(res.status == 204){
                 setCategoria(categoria.filter(cat => cat.IdCategoria != id))
             }
+            return res
         } catch (error) {
             console.log(error)
         }

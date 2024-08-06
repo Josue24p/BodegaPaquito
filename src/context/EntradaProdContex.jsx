@@ -30,7 +30,6 @@ export function EntradaProductProvider({ children }){
       const getEntradaById = async (id) => {
         try {
           const res = await getEntradaByIdRequest(id)
-          console.log(res.data) 
           return res.data
         } catch (error) {
           console.log(error)
@@ -41,7 +40,7 @@ export function EntradaProductProvider({ children }){
         try {
           const res = await createEntradaProductRequest(entradaP)
           setEntrada([...entrada, res.data]);
-          console.log(res.data)
+          return res
         } catch (error) {
           console.log(error)
         }
@@ -50,7 +49,7 @@ export function EntradaProductProvider({ children }){
       const updateEntradaP = async (id,entrada) => {
         try {
           const res = await updateEntradaProductRequest(id,entrada)
-          console.log(res.data)
+          return res
         } catch (error) {
           console.log(error)
         }
@@ -62,6 +61,7 @@ export function EntradaProductProvider({ children }){
           if (res.status==204) {
             setEntrada(entrada.filter(ent => ent.IdEntrada != id))
           }
+          return res
         } catch (error) {
           console.log(error)
         }
