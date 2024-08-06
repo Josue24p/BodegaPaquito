@@ -10,11 +10,12 @@ import Sidebar from '../components/Sidebar';
 import Box from '@mui/material/Box';
 import DeleteIcon from '@mui/icons-material/Delete';
 import EditIcon from '@mui/icons-material/Edit';
-import {  Button, Grid } from '@mui/material';
+import { Button, Grid } from '@mui/material';
 import { useSalidaProduct } from '../context/SalidaProdContext';
 import { useEffect } from 'react';
 import SalidaProdForm from '../components/SalidaProdForm';
 import { Link } from 'react-router-dom';
+import { useSnackbar } from '../context/SnackbarContext';
 
 
 const StyledTableCell = styled(TableCell)(({ theme }) => ({
@@ -39,49 +40,67 @@ const StyledTableRow = styled(TableRow)(({ theme }) => ({
 
 
 function SalidaProducto() {
-  const {getSalidaP, deleteSalidaP, salida} = useSalidaProduct();
+  const { getSalidaP, deleteSalidaP, salida } = useSalidaProduct();
 
-  useEffect(()=>{
+  //Usar la función showSnackbar para mostrar mensaje de actualizar, crear o eliminar.
+  const { showSnackbar } = useSnackbar();
+
+  const handleDelete = async (id) => {
+    try {
+      const response = await deleteSalidaP(id);
+      if (response) {
+        showSnackbar('Eliminado con éxito', 'success');
+        await getSalidaP();
+      } else {
+        showSnackbar(`Error al eliminar el registro de salida del producto con ID ${id}.`, 'error');
+      }
+    } catch (error) {
+      console.log(error)
+      showSnackbar(`Error al eliminar el registro de salida del producto con ID ${id}.`, 'error');
+    }
+  }
+
+  useEffect(() => {
     getSalidaP();
-    },[])
-    if(salida.length === 0) return <h1>No hay ingreso de productos</h1>
-    
+  }, [])
+  if (salida.length === 0) return <h1>No hay ingreso de productos</h1>
+
   return (
     <Box
       sx={{
         display: 'flex',
         flexDirection: { xs: 'column', md: 'row' },
-        
+
       }}
     >
 
       <Sidebar />
       <Grid
-      component={'main'}
+        component={'main'}
         container spacing={2}
         sx={{
           /* border: '1px solid blue', */
-          mt: {xs:9, md:9},
-          ml: {xs: 10, md: 2},
-          mr: {xs: 1, md: 1},
-          p: {xs: 2, md: 1},
-          width: {xs: '100%', md:'100%'},
+          mt: { xs: 9, md: 9 },
+          ml: { xs: 10, md: 2 },
+          mr: { xs: 1, md: 1 },
+          p: { xs: 2, md: 1 },
+          width: { xs: '100%', md: '100%' },
           height: { xs: '100%', md: '100%' },
         }}
       >
-        <Grid 
-        sx={{
-          /* border: '1px solid red', */
-          margin: { xs: 0, md: 0 },
-          p: { xs: 1, md: 1 },
-          width: { xs: '100%', md: '1000px' },
-          height: { xs: '400px', md: '100%' },
-          ml: { xs: 0, md: 0 },
-          mr: { xs: 2, md: 15 },
-          mb: { xs: 2, md: 2 }
-        }}
+        <Grid
+          sx={{
+            /* border: '1px solid red', */
+            margin: { xs: 0, md: 0 },
+            p: { xs: 1, md: 1 },
+            width: { xs: '100%', md: '1000px' },
+            height: { xs: '100%', md: '100%' },
+            ml: { xs: 0, md: 0 },
+            mr: { xs: 2, md: 15 },
+            mb: { xs: 2, md: 2 }
+          }}
         >
-          <TableContainer sx={{ width: { xs: '100%' }, height: { xs: '380px', md: '100%' } }} component={Paper}>
+          <TableContainer sx={{ width: { xs: '100%' }, height: { xs: '340px', md: '100%' } }} component={Paper}>
             <Table sx={{ minWidth: 700 }} aria-label="customized table">
               <TableHead>
                 <TableRow>
@@ -106,15 +125,15 @@ function SalidaProducto() {
                     <StyledTableCell align="right">{salida.Categoria}</StyledTableCell>
                     <StyledTableCell align="right">{salida.Cantidad}</StyledTableCell>
                     <StyledTableCell align="right">
-                    {(() => {
+                      {(() => {
                         const date = new Date(salida.FechaSalida);
                         const year = date.getUTCFullYear();
                         const month = (date.getUTCMonth() + 1).toString().padStart(2, '0'); // getUTCMonth() es cero-indexado
                         const day = date.getUTCDate().toString().padStart(2, '0');
                         return `${day}/${month}/${year}`;
                       })()}
-                      </StyledTableCell>
-                      <StyledTableCell align="right">
+                    </StyledTableCell>
+                    <StyledTableCell align="right">
                       <Link to={`/salidaProducto/${salida.IdSalida}`}>
                         <Button sx={{
                           minWidth: '30px',
@@ -138,8 +157,7 @@ function SalidaProducto() {
                         }
                       }}
                         onClick={async () => {
-                          await deleteSalidaP(salida.IdSalida);
-                          getSalidaP();
+                          handleDelete(salida.IdSalida);
                         }}
                         variant='contained'><DeleteIcon />
                       </Button>
@@ -150,7 +168,7 @@ function SalidaProducto() {
             </Table>
           </TableContainer>
         </Grid>
-                <SalidaProdForm salida={salida}/>
+        <SalidaProdForm salida={salida} />
       </Grid>
 
     </Box>

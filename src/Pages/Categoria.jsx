@@ -16,6 +16,7 @@ import CategoriaForm from '../components/CategoriaForm';
 import { useCategoria } from '../context/CategoriaContext';
 import { Link } from 'react-router-dom';
 import { useEffect } from 'react';
+import { useSnackbar } from '../context/SnackbarContext';
 
 
 const StyledTableCell = styled(TableCell)(({ theme }) => ({
@@ -41,6 +42,25 @@ const StyledTableRow = styled(TableRow)(({ theme }) => ({
 
 function Categoria() {
   const { getCategoria, deleteCategoria, categoria } = useCategoria();
+
+  //Usar la función showSnackbar para mostrar mensaje de actualizar, crear o eliminar.
+  const { showSnackbar } = useSnackbar();
+
+  const handleDelete = async (id) => {
+    try {
+      const response = await deleteCategoria(id);
+      /* console.log(response) */
+      if (response) {
+        showSnackbar('Eliminado con éxito', 'success');
+        await getCategoria();
+      } else {
+        showSnackbar(`Error al eliminar la categoria con ID ${id}. El registro a eliminar, está registrado en la tabla de Productos`, 'error');
+      }
+    } catch (error) {
+      console.log(error);
+      showSnackbar(`Error al eliminar la categoria con ID ${id}. El registro a eliminar, está registrado en la tabla de Productos`, 'error');
+    }
+  };
 
   useEffect(() => {
     getCategoria()
@@ -101,42 +121,41 @@ function Categoria() {
                     <StyledTableCell align="right">{categoria.Nombre}</StyledTableCell>
                     <StyledTableCell align="right">{categoria.Descripcion}</StyledTableCell>
                     <StyledTableCell align="right">
-                    <Link to={`/categoria/${categoria.IdCategoria}`}>
-                    <Button sx={{
-                        minWidth: '30px',
-                        backgroundColor: 'green',
-                        color: 'black',
-                        ':hover':{
-                          backgroundColor: 'orange'
-                        }
-                      }}    
-                      variant='contained'><EditIcon/>
-                      </Button>
-                    </Link>
+                      <Link to={`/categoria/${categoria.IdCategoria}`}>
+                        <Button sx={{
+                          minWidth: '30px',
+                          backgroundColor: 'green',
+                          color: 'black',
+                          ':hover': {
+                            backgroundColor: 'orange'
+                          }
+                        }}
+                          variant='contained'><EditIcon />
+                        </Button>
+                      </Link>
                     </StyledTableCell>
                     <StyledTableCell align="right">
                       <Button sx={{
                         minWidth: '30px',
                         backgroundColor: 'blueviolet',
                         color: 'white',
-                        ':hover':{
+                        ':hover': {
                           backgroundColor: 'red'
                         }
                       }}
-                      onClick={async()=>{
-                        await deleteCategoria(categoria.IdCategoria)
-                        await getCategoria()
-                      }}
-                        variant='contained'><DeleteIcon/>
+                        onClick={async () => {
+                          handleDelete(categoria.IdCategoria)
+                        }}
+                        variant='contained'><DeleteIcon />
                       </Button>
-                      </StyledTableCell>
+                    </StyledTableCell>
                   </StyledTableRow>
                 ))}
               </TableBody>
             </Table>
           </TableContainer>
         </Grid>
-        <CategoriaForm key={categoria.IdCategoria} categoria = {categoria} />
+        <CategoriaForm key={categoria.IdCategoria} categoria={categoria} />
       </Grid>
 
     </Box>

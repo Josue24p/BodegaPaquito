@@ -16,6 +16,7 @@ import ProveedorForm from '../components/ProveedorForm';
 import { useProveedor } from '../context/ProveedorContext';
 import { Link } from 'react-router-dom';
 import { useEffect } from 'react';
+import { useSnackbar } from '../context/SnackbarContext';
 
 
 const StyledTableCell = styled(TableCell)(({ theme }) => ({
@@ -42,10 +43,30 @@ const StyledTableRow = styled(TableRow)(({ theme }) => ({
 function Proveedor() {
   const { getProveedor, deleteProveedor, proveedor } = useProveedor();
 
+  //Usar la función showSnackbar para mostrar mensaje de actualizar, crear o eliminar.
+  const { showSnackbar } = useSnackbar();
+
+  const handleDelete = async(id) => {
+    try {
+      const response = await deleteProveedor(id);
+      if (response) {
+        showSnackbar('Eliminado con éxito', 'success');
+        await getProveedor();
+      } else {
+        showSnackbar(`Error al eliminar el proveedor con ID ${id} está registrado en el Inventario o Entrada de Productos`,'error');
+      }
+    } catch (error) {
+      console.log(error)
+      showSnackbar(`Error al eliminar el proveedor con ID ${id} está registrado en el Inventario o Entrada de Productos`,'error');
+    }
+  }
+
   useEffect(() => {
     getProveedor()
   }, [])
+
   if (proveedor.length === 0) return <h1>No proveedores</h1>
+
   return (
     <Box
       sx={{
@@ -107,42 +128,41 @@ function Proveedor() {
                     <StyledTableCell align="right">{proveedor.Telefono}</StyledTableCell>
                     <StyledTableCell align="right">{proveedor.Correo}</StyledTableCell>
                     <StyledTableCell align="right">
-                    <Link to={`/proveedor/${proveedor.IdProveedor}`}>
-                    <Button sx={{
-                        minWidth: '30px',
-                        backgroundColor: 'green',
-                        color: 'black',
-                        ':hover':{
-                          backgroundColor: 'orange'
-                        }
-                      }}    
-                      variant='contained'><EditIcon/>
-                      </Button>
-                    </Link>
+                      <Link to={`/proveedor/${proveedor.IdProveedor}`}>
+                        <Button sx={{
+                          minWidth: '30px',
+                          backgroundColor: 'green',
+                          color: 'black',
+                          ':hover': {
+                            backgroundColor: 'orange'
+                          }
+                        }}
+                          variant='contained'><EditIcon />
+                        </Button>
+                      </Link>
                     </StyledTableCell>
                     <StyledTableCell align="right">
                       <Button sx={{
                         minWidth: '30px',
                         backgroundColor: 'blueviolet',
                         color: 'white',
-                        ':hover':{
+                        ':hover': {
                           backgroundColor: 'red'
                         }
                       }}
-                      onClick={async()=>{
-                        await deleteProveedor(proveedor.IdProveedor)
-                        await getProveedor()
-                      }}
-                        variant='contained'><DeleteIcon/>
+                        onClick={async () => {
+                          handleDelete(proveedor.IdProveedor)
+                        }}
+                        variant='contained'><DeleteIcon />
                       </Button>
-                      </StyledTableCell>
+                    </StyledTableCell>
                   </StyledTableRow>
                 ))}
               </TableBody>
             </Table>
           </TableContainer>
         </Grid>
-        <ProveedorForm key={proveedor.IdProveedor} proveedor = {proveedor} />
+        <ProveedorForm key={proveedor.IdProveedor} proveedor={proveedor} />
       </Grid>
 
     </Box>

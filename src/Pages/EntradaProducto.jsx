@@ -15,6 +15,7 @@ import { useEntradaProduct } from '../context/EntradaProdContex';
 import { useEffect } from 'react';
 import EntradaProdForm from '../components/EntradaProdForm';
 import { Link } from 'react-router-dom';
+import { useSnackbar } from '../context/SnackbarContext';
 
 
 const StyledTableCell = styled(TableCell)(({ theme }) => ({
@@ -40,6 +41,25 @@ const StyledTableRow = styled(TableRow)(({ theme }) => ({
 
 function EntradaProducto() {
   const { getEntradaP, deleteEntradaP, entrada } = useEntradaProduct();
+
+  //Usar la función showSnackbar para mostrar mensaje de actualizar, crear o eliminar.
+  const { showSnackbar } = useSnackbar();
+
+  const handleDelete = async (id) => {
+    try {
+      const response = await deleteEntradaP(id);
+      if (response) {
+        showSnackbar('Eliminado con éxito', 'success');
+        await getEntradaP();
+      } else {
+        showSnackbar(`Error al eliminar el registro de entrada del producto con ID ${id}.`, 'error');
+      }
+    } catch (error) {
+      console.log(error);
+      showSnackbar(`Error al eliminar el registro de entrada del producto con ID ${id}.`, 'error');
+    }
+  };
+
 
   useEffect(() => {
     getEntradaP();
@@ -137,8 +157,7 @@ function EntradaProducto() {
                         }
                       }}
                         onClick={async () => {
-                          await deleteEntradaP(entrada.IdEntrada)
-                          await getEntradaP()
+                          handleDelete(entrada.IdEntrada)
                         }}
                         variant='contained'><DeleteIcon />
                       </Button>

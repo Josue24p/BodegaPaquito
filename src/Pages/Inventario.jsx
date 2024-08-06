@@ -11,13 +11,12 @@ import Box from '@mui/material/Box';
 import DeleteIcon from '@mui/icons-material/Delete';
 import EditIcon from '@mui/icons-material/Edit';
 import { Button, Grid } from '@mui/material';
-import { useEffect, useState } from 'react';
+import { useEffect } from 'react';
 
 import { useInventario } from '../context/InventarioContext';
 import InventarioForm from '../components/InventarioForm';
 import { Link } from 'react-router-dom';
-import Snackbar from '@mui/material/Snackbar';
-import Alert from '@mui/material/Alert';
+import { useSnackbar } from '../context/SnackbarContext';
 
 const StyledTableCell = styled(TableCell)(({ theme }) => ({
   [`&.${tableCellClasses.head}`]: {
@@ -43,31 +42,22 @@ const StyledTableRow = styled(TableRow)(({ theme }) => ({
 function Inventario() {
   const { inventario, getInventario, deleteInventario  } = useInventario();
 
-  const [snackbarOpen, setSnackbarOpen] = useState(false);
-
-  const [snackbarMessage, setSnackbarMessage] = useState('');
-
-  const [snackbarSeverity, setSnackbarSeverity] = useState('success');
+    //Usar la función showSnackbar para mostrar mensaje de actualizar, crear o eliminar.
+    const { showSnackbar } = useSnackbar();
 
   const handleDelete = async(id) => {
     try {
       const response = await deleteInventario(id);
       if (response) {
-        setSnackbarMessage('Eliminado con éxito');
-        setSnackbarSeverity('success');
+        showSnackbar('Eliminado con éxito', 'success');
         await getInventario();
       } else {
-        setSnackbarMessage(`Error al eliminar el producto con ID ${id} del inventario'`);
-        setSnackbarSeverity('error');
+        showSnackbar(`Error al eliminar el producto con ID ${id} del inventario`,'error');
       }
     } catch (error) {
       console.log(error)
-      setSnackbarMessage(`No se puede eliminar el producto con ID ${id}, primero elimine las relaciones en la otra tabla.`);
-      setSnackbarSeverity('error');
-    }finally{
-      setSnackbarOpen(true);
+      showSnackbar(`Error al eliminar el producto con ID ${id} del inventario`,'error');
     }
-    
   }
 
   useEffect(() => {
@@ -179,20 +169,6 @@ function Inventario() {
         </Grid>
         <InventarioForm/>
       </Grid>
-      <Snackbar
-      open={snackbarOpen}
-      autoHideDuration={6000}
-      onClose={()=> setSnackbarOpen(false)}
-      anchorOrigin={{vertical: 'top', horizontal: 'center'}}
-      >
-        <Alert 
-        onClose={()=> setSnackbarOpen(false)}
-        severity={snackbarSeverity}
-        sx={{width:'100%'}}
-        >
-          {snackbarMessage}
-        </Alert>
-      </Snackbar>
 
     </Box>
   );

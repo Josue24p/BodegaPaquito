@@ -15,10 +15,10 @@ import Button from '@mui/material/Button';
 import { Grid  } from '@mui/material';
 import ProductoForm from '../components/ProductoForm';
 import { useProduct } from '../context/ProductContext';
-import { useEffect, useState } from 'react';
+import { useEffect } from 'react';
 import { Link } from 'react-router-dom';
-import Snackbar from '@mui/material/Snackbar';
-import Alert from '@mui/material/Alert';
+import { useSnackbar } from '../context/SnackbarContext';
+
 
 const StyledTableCell = styled(TableCell)(({ theme }) => ({
   [`&.${tableCellClasses.head}`]: {
@@ -41,41 +41,26 @@ const StyledTableRow = styled(TableRow)(({ theme }) => ({
 }));
 
 
-
-
-/* const handleSubmit = (e) => {
-  e.preventDefault()
-  console.log('submit')
-} */
-
 function Producto() {
   const {getProduct, deleteProducto ,product} = useProduct();
 
-  const [snackbarOpen, setSnackbarOpen] = useState(false);
-
-  const [snackbarMessage, setSnackbarMessage] = useState('');
-
-  const [snackbarSeverity, setSnackbarSeverity] = useState('success');
+    //Usar la función showSnackbar para mostrar mensaje de actualizar, crear o eliminar.
+    const { showSnackbar } = useSnackbar();
 
   const handleDelete = async (id) => {
     try {
       const response = await deleteProducto(id);
       /* console.log(response) */
       if (response) {
-        setSnackbarMessage('Eliminado con éxito');
-        setSnackbarSeverity('success');
+        showSnackbar('Eliminado con éxito', 'success');
         await getProduct();
       } else {
-        setSnackbarMessage(`Error al eliminar el producto con ID ${id}:  'Ocurrió un error inesperado'`);
-        setSnackbarSeverity('error');
+        showSnackbar(`Error al eliminar el producto con ID ${id}. 'El registro a eliminar, está siendo usado en el Inventario'`,'error');
       }
     } catch (error) {
       console.log(error);
-      setSnackbarMessage('Ocurrió un error al intentar eliminar el producto');
-      setSnackbarSeverity('error');
-    } finally {
-      setSnackbarOpen(true);
-    }
+      showSnackbar(`Error al eliminar el producto con ID ${id}. El registro a eliminar, está siendo usado en el Inventario`,'error');
+    } 
   };
 
   useEffect(() => {
@@ -177,20 +162,6 @@ function Producto() {
         </Grid>
                 <ProductoForm key={product.IdProducto} product ={product}/>
       </Grid>
-      <Snackbar
-      open={snackbarOpen}
-      autoHideDuration={6000}
-      onClose={()=> setSnackbarOpen(false)}
-      anchorOrigin={{vertical: 'top', horizontal: 'center'}}
-      >
-        <Alert 
-        onClose={()=> setSnackbarOpen(false)}
-        severity={snackbarSeverity}
-        sx={{width:'100%'}}
-        >
-          {snackbarMessage}
-        </Alert>
-      </Snackbar>
     </Box>
   );
 }
